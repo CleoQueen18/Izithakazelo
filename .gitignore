@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.next/
+out/
+
+# Images - keep them locally, don't push to GitHub
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.ico
+public/images/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Prisma
+prisma/*.db
+prisma/*.db-journal
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+Thumbs.db

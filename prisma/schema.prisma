@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Clan {
+  id          Int            @id @default(autoincrement())
+  name        String         @unique
+  tribe       String
+  description String?
+  originStory String?         // origin/birth story of the clan
+  history     String?         // detailed history of the clan
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  surnames    ClanSurname[]
+  featuredStories FeaturedStory[]
+  images      ClanImage[]     // Add this relation for images
+}
+
+model Surname {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  origin      String?
+  language    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  clans       ClanSurname[]
+}
+
+model ClanSurname {
+  id          Int      @id @default(autoincrement())
+  clanId      Int
+  surnameId   Int
+  clan_praise String
+  clan        Clan     @relation(fields: [clanId], references: [id])
+  surname     Surname  @relation(fields: [surnameId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([clanId, surnameId])
+}
+
+model Contribution {
+  id               Int      @id @default(autoincrement())
+  type             String   // "NEW_SURNAME", "NEW_PRAISE", "CORRECTION"
+  data             String   // JSON string storing the contribution data
+  contributorName  String
+  contributorEmail String?
+  status           String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  adminNotes       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model FeaturedStory {
+  id            Int       @id @default(autoincrement())
+  title         String
+  summary       String
+  content       String
+  clanId        Int?
+  clan          Clan?     @relation(fields: [clanId], references: [id])
+  imageUrl      String?
+  isActive      Boolean   @default(true)
+  displayOrder  Int       @default(0)
+  scheduledDate DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ShareAnalytics {
+  id          Int      @id @default(autoincrement())
+  clanId      Int
+  clanName    String
+  platform    String
+  sharedAt    DateTime @default(now())
+  userAgent   String?
+  referrer    String?
+  
+  @@index([clanId])
+  @@index([platform])
+  @@index([sharedAt])
+}
+
+model ClanImage {
+  id          Int      @id @default(autoincrement())
+  clanId      Int
+  imageUrl    String
+  altText     String?
+  isPrimary   Boolean  @default(false)
+  uploadedAt  DateTime @default(now())
+  uploadedBy  Int?
+  clan        Clan     @relation(fields: [clanId], references: [id], onDelete: Cascade)
+  
+  @@unique([clanId, isPrimary])
+}
