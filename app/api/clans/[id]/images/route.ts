@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import path from "path";
 import { existsSync } from "fs";
 
@@ -8,12 +8,13 @@ const prisma = new PrismaClient();
 
 // GET all images for a clan
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const images = await prisma.clanImage.findMany({
-      where: { clanId: parseInt(params.id) },
+      where: { clanId: parseInt(id) },
       orderBy: { isPrimary: "desc" },
     });
     return NextResponse.json(images);
@@ -25,10 +26,11 @@ export async function GET(
 
 // POST upload a new image for a clan
 export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const formData = await request.formData();
     const file = formData.get("image") as File;
     const altText = formData.get("altText") as string;
@@ -70,13 +72,13 @@ export async function POST(
     
     // Check if this is the first image for this clan
     const existingImages = await prisma.clanImage.count({
-      where: { clanId: parseInt(params.id) },
+      where: { clanId: parseInt(id) },
     });
     
     // Create image record in database
     const clanImage = await prisma.clanImage.create({
       data: {
-        clanId: parseInt(params.id),
+        clanId: parseInt(id),
         imageUrl,
         altText: altText || null,
         isPrimary: existingImages === 0, // First image becomes primary
@@ -92,10 +94,11 @@ export async function POST(
 
 // DELETE an image
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const imageId = searchParams.get("imageId");
     
@@ -129,7 +132,3 @@ export async function DELETE(
     return NextResponse.json({ error: "Failed to delete image" }, { status: 500 });
   }
 }
-
-// Helper function to unlink file (add at top with other imports)
-// Add this import: import { unlink } from "fs/promises";
-import { unlink } from "fs/promises";
