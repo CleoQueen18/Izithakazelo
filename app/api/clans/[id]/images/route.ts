@@ -39,13 +39,11 @@ export async function POST(
       return NextResponse.json({ error: "No image provided" }, { status: 400 });
     }
     
-    // Validate file type
     const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
     if (!validTypes.includes(file.type)) {
       return NextResponse.json({ error: "Invalid file type. Use JPEG, PNG, WebP, or GIF." }, { status: 400 });
     }
     
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: "File too large. Max 5MB." }, { status: 400 });
     }
@@ -53,35 +51,30 @@ export async function POST(
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     
-    // Create unique filename
     const timestamp = Date.now();
     const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
     const filename = `${timestamp}-${safeName}`;
     const uploadDir = path.join(process.cwd(), "public/uploads/clans");
     
-    // Ensure directory exists
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
     
-    // Save file
     const filepath = path.join(uploadDir, filename);
     await writeFile(filepath, buffer);
     
     const imageUrl = `/uploads/clans/${filename}`;
     
-    // Check if this is the first image for this clan
     const existingImages = await prisma.clanImage.count({
       where: { clanId: parseInt(id) },
     });
     
-    // Create image record in database
     const clanImage = await prisma.clanImage.create({
       data: {
         clanId: parseInt(id),
         imageUrl,
         altText: altText || null,
-        isPrimary: existingImages === 0, // First image becomes primary
+        isPrimary: existingImages === 0,
       },
     });
     
@@ -106,7 +99,6 @@ export async function DELETE(
       return NextResponse.json({ error: "Image ID required" }, { status: 400 });
     }
     
-    // Get image info first to delete file
     const image = await prisma.clanImage.findUnique({
       where: { id: parseInt(imageId) },
     });
@@ -115,13 +107,11 @@ export async function DELETE(
       return NextResponse.json({ error: "Image not found" }, { status: 404 });
     }
     
-    // Delete the file from disk
     const filepath = path.join(process.cwd(), "public", image.imageUrl);
     if (existsSync(filepath)) {
       await unlink(filepath);
     }
     
-    // Delete from database
     await prisma.clanImage.delete({
       where: { id: parseInt(imageId) },
     });
