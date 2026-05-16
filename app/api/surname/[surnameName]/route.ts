@@ -1,16 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ surnameName: string }> }
 ) {
   try {
     const { surnameName } = await params;
     
-    // Find the surname
     const surname = await prisma.surname.findFirst({
       where: {
         name: {
@@ -28,18 +27,12 @@ export async function GET(
     });
     
     if (!surname) {
-      return NextResponse.json(
-        { error: `Surname "${surnameName}" not found` },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Surname not found" }, { status: 404 });
     }
     
     return NextResponse.json(surname);
   } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch surname data" },
-      { status: 500 }
-    );
+    console.error("Error:", error);
+    return NextResponse.json({ error: "Failed to fetch surname" }, { status: 500 });
   }
 }

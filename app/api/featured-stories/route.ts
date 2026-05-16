@@ -1,86 +1,74 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// GET active featured stories (with daily rotation)
-export async function GET() {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    // Get today's date (without time) for comparison
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const { id } = await params;
     
-    // Get tomorrow's date
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    // First, check if there's a story scheduled for today
-    let stories = await prisma.featuredStory.findMany({
-      where: {
-        isActive: true,
-        scheduledDate: {
-          gte: today,
-          lt: tomorrow,
-        },
-      },
-      include: {
-        clan: true,
-      },
-      orderBy: { scheduledDate: "asc" },
+    const story = await prisma.featuredStory.findUnique({
+      where: { id: parseInt(id) },
+      include: { clan: true },
     });
     
-    // If no stories scheduled for today, use displayOrder rotation
-    if (stories.length === 0) {
-      // Get all active stories
-      const allStories = await prisma.featuredStory.findMany({
-        where: { isActive: true },
-        include: { clan: true },
-        orderBy: { displayOrder: "asc" },
-      });
-      
-      if (allStories.length > 0) {
-        // Use day of month to rotate through stories
-        const dayOfMonth = today.getDate();
-        const storyIndex = (dayOfMonth - 1) % allStories.length;
-        stories = [allStories[storyIndex]];
-      }
+    if (!story) {
+      return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
     
-    return NextResponse.json(stories);
+    return NextResponse.json(story);
   } catch (error) {
-    console.error("GET Featured Stories Error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch featured stories" },
-      { status: 500 }
-    );
+    console.error("Error:", error);
+    return NextResponse.json({ error: "Failed to fetch story" }, { status: 500 });
   }
 }
 
-// POST create a new featured story
-export async function POST(request: Request) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const body = await request.json();
-    const { title, summary, content, clanId, imageUrl, displayOrder, scheduledDate } = body;
     
-    const story = await prisma.featuredStory.create({
+    const story = await prisma.featuredStory.update({
+      where: { id: parseInt(id) },
       data: {
-        title,
-        summary,
-        content,
-        clanId: clanId || null,
-        imageUrl: imageUrl || null,
-        displayOrder: displayOrder || 0,
-        scheduledDate: scheduledDate ? new Date(scheduledDate) : null,
-        isActive: true,
+        title: body.title,
+        summary: body.summary,
+        content: body.content,
+        clanId: body.clanId || null,
+        imageUrl: body.imageUrl || null,
+        displayOrder: body.displayOrder,
+        scheduledDate: body.scheduledDate ? new Date(body.scheduledDate) : null,
+        isActive: body.isActive,
       },
     });
     
-    return NextResponse.json(story, { status: 201 });
+    return NextResponse.json(story);
   } catch (error) {
-    console.error("POST Featured Story Error:", error);
-    return NextResponse.json(
-      { error: "Failed to create featured story" },
-      { status: 500 }
-    );
+    console.error("PUT Error:", error);
+    return NextResponse.json({ error: "Failed to update story" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    
+    await prisma.featuredStory.delete({
+      where: { id: parseInt(id) },
+    });
+    
+    return NextResponse.json({ message: "Story deleted successfully" });
+  } catch (error) {
+    console.error("DELETE Error:", error);
+    return NextResponse.json({ error: "Failed to delete story" }, { status: 500 });
   }
 }
