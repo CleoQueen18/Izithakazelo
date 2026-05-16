@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -30,7 +31,7 @@ type Clan = {
 const BACKGROUND_IMAGE = "/images/Clans.png";
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-export default function ClansPage() {
+function ClansContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [clans, setClans] = useState<Clan[]>([]);
@@ -50,7 +51,6 @@ export default function ClansPage() {
 
   const tribes = ["All", "Zulu", "Xhosa", "Swati", "Ndebele", "Sotho", "Tswana", "Venda", "Tsonga", "Pedi"];
 
-  // Get letter from URL query parameter
   useEffect(() => {
     const letter = searchParams.get("letter");
     if (letter && alphabet.includes(letter)) {
@@ -126,12 +126,10 @@ export default function ClansPage() {
     router.push("/clans");
   };
 
-  // First filter by tribe
   let filteredClans = selectedTribe && selectedTribe !== "All"
     ? clans.filter(clan => clan.tribe === selectedTribe)
     : clans;
 
-  // Then filter by letter (surname first letter)
   if (selectedLetter) {
     filteredClans = filteredClans
       .map(clan => ({
@@ -158,10 +156,8 @@ export default function ClansPage() {
       className="min-h-screen bg-cover bg-center bg-fixed"
       style={{ backgroundImage: `url('${BACKGROUND_IMAGE}')` }}
     >
-      {/* Warm brown overlay */}
       <div className="min-h-screen bg-[#2b1d14]/90">
         <div className="max-w-6xl mx-auto px-6 py-6">
-          {/* Header */}
           <div className="mb-6">
             <button
               onClick={() => router.back()}
@@ -177,14 +173,12 @@ export default function ClansPage() {
             </p>
           </div>
 
-          {/* Notification */}
           {notification && (
             <div className={`mb-4 p-2 rounded-lg text-sm ${notification.type === "success" ? "bg-green-500/30 text-green-200" : "bg-red-500/30 text-red-200"}`}>
               {notification.message}
             </div>
           )}
 
-          {/* Active Letter Filter */}
           {selectedLetter && (
             <div className="mb-3 flex items-center justify-between bg-amber-500/30 rounded-lg px-3 py-1.5">
               <span className="text-sm text-white">
@@ -199,7 +193,6 @@ export default function ClansPage() {
             </div>
           )}
 
-          {/* Filter Bar */}
           <div className="bg-[#2b1d14]/70 backdrop-blur-sm rounded-xl border border-amber-800/30 p-3 mb-4 flex flex-wrap items-center justify-between gap-2">
             <select
               value={selectedTribe}
@@ -233,7 +226,6 @@ export default function ClansPage() {
             </div>
           </div>
 
-          {/* Alphabet Filter */}
           <div className="bg-[#2b1d14]/70 backdrop-blur-sm rounded-xl border border-amber-800/30 p-3 mb-4">
             <p className="text-amber-300/60 text-[10px] uppercase tracking-wider mb-2 text-center">
               Filter by Surname Letter
@@ -263,7 +255,6 @@ export default function ClansPage() {
             </div>
           </div>
 
-          {/* Add Form */}
           {showAddForm && (
             <div className="bg-[#2b1d14]/80 backdrop-blur-sm rounded-xl border border-amber-800/30 p-4 mb-4">
               <h2 className="text-white font-semibold text-sm mb-3">Add New Clan Praise</h2>
@@ -327,7 +318,6 @@ export default function ClansPage() {
             </div>
           )}
 
-          {/* Clans List */}
           {filteredClans.length === 0 ? (
             <div className="text-center py-12 bg-[#2b1d14]/70 backdrop-blur-sm rounded-xl border border-amber-800/30">
               <p className="text-amber-300/60 text-sm">No clans found.</p>
@@ -364,7 +354,6 @@ export default function ClansPage() {
                     
                     {isExpanded && (
                       <div className="divide-y divide-amber-800/30 border-t border-amber-800/30">
-                        {/* Image Gallery for this clan */}
                         <div className="px-4 pt-3">
                           <ClanImageGallery clanId={clan.id} />
                         </div>
@@ -383,8 +372,8 @@ export default function ClansPage() {
                                   "{item.clan_praise.substring(0, 80)}"
                                 </p>
                                 <div className="flex gap-3 text-amber-300/40 text-[10px] mt-1">
-                                  {item.surname.origin && <span> {item.surname.origin}</span>}
-                                  {item.surname.language && <span> {item.surname.language}</span>}
+                                  {item.surname.origin && <span>📍 {item.surname.origin}</span>}
+                                  {item.surname.language && <span>🗣️ {item.surname.language}</span>}
                                 </div>
                               </div>
                               <SocialShare
@@ -407,5 +396,13 @@ export default function ClansPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ClansPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-20">Loading clans...</div>}>
+      <ClansContent />
+    </Suspense>
   );
 }
