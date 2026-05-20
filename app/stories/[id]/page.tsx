@@ -21,7 +21,7 @@ type RelatedStory = {
   summary: string;
 };
 
-const BACKGROUND_IMAGE = "/images/features-bg.png";
+const BACKGROUND_IMAGE = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features-bg.png";
 
 // Helper function to calculate reading time
 function getReadingTime(content: string): number {

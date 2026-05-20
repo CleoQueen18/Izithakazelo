@@ -11,25 +11,25 @@ const features = [
   {
     title: "Surnames & Clans",
     desc: "Find your izithakazelo and clan connections.",
-    icon: "/images/features/surnames.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features/surnames.png",
     alt: "Surnames and clans icon",
   },
   {
     title: "Praise Poems",
     desc: "Discover the poetry and praises of your people.",
-    icon: "/images/features/praise.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features/praise.png",
     alt: "Praise poems icon",
   },
   {
     title: "History & Lineage",
     desc: "Trace ancestry, roots, and generational stories.",
-    icon: "/images/features/history.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features/history.png",
     alt: "History and lineage icon",
   },
   {
     title: "Share Your Story",
     desc: "Help preserve family knowledge for future generations.",
-    icon: "/images/features/share.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features/share.png",
     alt: "Share your story icon",
   },
 ];
@@ -45,9 +45,9 @@ type FeaturedStory = {
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-const DEFAULT_STORY_BG = "/images/stories/default-story.png";
-const FEATURES_BG = "/images/features-bg.png";
-const HERITAGE_BG = "/images/heritage-bg.png";
+const DEFAULT_STORY_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/stories/default-story.png";
+const FEATURES_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features-bg.png";
+const HERITAGE_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/heritage-bg.png";
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -108,7 +108,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[85vh] min-h-[600px] overflow-hidden">
         <Image
-          src="/images/izithakazelo.png"
+          src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/izithakazelo.png"
           alt="Izithakazelo heritage background"
           fill
           priority
@@ -212,7 +212,7 @@ export default function HomePage() {
       <Link href="/clans" className="flex flex-col items-center gap-3 group">
         <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
           <img
-            src="/images/footer/roots1.png"
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/footer/roots1.png"
             alt="Learn Your Roots"
             className="w-full h-full object-cover"
             style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
@@ -224,7 +224,7 @@ export default function HomePage() {
       <Link href="/clans#add-form" className="flex flex-col items-center gap-3 group">
         <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
           <img
-            src="/images/footer/share1.png"
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/footer/share1.png"
             alt="Share Your Stories"
             className="w-full h-full object-cover"
             style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
@@ -236,7 +236,7 @@ export default function HomePage() {
       <Link href="/about" className="flex flex-col items-center gap-3 group">
         <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
           <img
-            src="/images/footer/connect1.png"
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/footer/connect1.png"
             alt="Connect with Community"
             className="w-full h-full object-cover"
             style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}

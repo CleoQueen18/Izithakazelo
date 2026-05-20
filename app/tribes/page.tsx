@@ -20,17 +20,17 @@ type Tribe = {
 // Map tribe names to their icon images
 const getTribeIcon = (tribeName: string): string => {
   const iconMap: Record<string, string> = {
-    Zulu: "/images/tribes/zulu.png",
-    Xhosa: "/images/tribes/xhosa.png",
-    Swati: "/images/tribes/swati.png",
-    Ndebele: "/images/tribes/ndebele.png",
-    Sotho: "/images/tribes/sotho.png",
-    Tswana: "/images/tribes/tswana.png",
-    Venda: "/images/tribes/venda.png",
-    Tsonga: "/images/tribes/tsonga.png",
-    Pedi: "/images/tribes/pedi.png",
+    Zulu: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/zulu.png",
+    Xhosa: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/xhosa.png",
+    Swati: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/swati.png",
+    Ndebele: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/ndebele.png",
+    Sotho: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/sotho.png",
+    Tswana: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/tswana.png",
+    Venda: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/venda.png",
+    Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/tsonga.png",
+    Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/pedi.png",
   };
-  return iconMap[tribeName] || "/images/tribes/default.png";
+  return iconMap[tribeName] || "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribes/default.png";
 };
 
 const tribeStyles: Record<
@@ -173,7 +173,7 @@ export default function TribesPage() {
   return (
     <div 
       className="min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/images/Tribe2.png')" }}
+      style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Tribe2.png')" }}
     >
       {/* Dark overlay for readability */}
       <div className="min-h-screen bg-black/50">

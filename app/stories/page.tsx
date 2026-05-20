@@ -19,8 +19,8 @@ type Story = {
   } | null;
 };
 
-const DEFAULT_STORY_IMAGE = "/images/stories/default-story.png";
-const BACKGROUND_IMAGE = "/images/Stories.png";
+const DEFAULT_STORY_IMAGE = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/stories/default-story.png";
+const BACKGROUND_IMAGE = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Stories.png";
 
 export default function AllStoriesPage() {
   const router = useRouter();

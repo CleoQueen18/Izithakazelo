@@ -31,17 +31,17 @@ type Clan = {
 // Map tribe names to their background images
 const getTribeBackground = (tribeName: string): string => {
   const bgMap: Record<string, string> = {
-    Zulu: "/images/tribe-bg/zulu1.png",
-    Xhosa: "/images/tribe-bg/xhosa1.png",
-    Swati: "/images/tribe-bg/swati1.png",
-    Ndebele: "/images/tribe-bg/ndebele1.png",
-    Sotho: "/images/tribe-bg/sotho1.png",
-    Tswana: "/images/tribe-bg/tswana1.png",
-    Venda: "/images/tribe-bg/venda1.png",
-    Tsonga: "/images/tribe-bg/tsonga1.png",
-    Pedi: "/images/tribe-bg/pedi1.png",
+    Zulu: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/zulu1.png",
+    Xhosa: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/xhosa1.png",
+    Swati: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/swati1.png",
+    Ndebele: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/ndebele1.png",
+    Sotho: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/sotho1.png",
+    Tswana: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/tswana1.png",
+    Venda: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/venda1.png",
+    Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/tsonga1.png",
+    Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/pedi1.png",
   };
-  return bgMap[tribeName] || "/images/Tribe2.png";
+  return bgMap[tribeName] || "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Tribe2.png";
 };
 
 export default function TribeDetailPage() {

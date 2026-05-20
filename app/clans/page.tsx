@@ -28,7 +28,7 @@ type Clan = {
   surnames: ClanSurname[];
 };
 
-const BACKGROUND_IMAGE = "/images/Clans.png";
+const BACKGROUND_IMAGE = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Clans.png";
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 function ClansContent() {

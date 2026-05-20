@@ -88,7 +88,7 @@ export default function ClanImageGallery({ clanId }: { clanId: number }) {
 
   const handleSetPrimary = async (imageId: number) => {
     try {
-      const res = await fetch(`/api/clans/${clanId}/images/${imageId}/primary`, {
+      const res = await fetch(`/api/clans/${clanId}https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/${imageId}/primary`, {
         method: "PUT",
       });
       

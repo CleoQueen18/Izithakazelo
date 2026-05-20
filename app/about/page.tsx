@@ -21,7 +21,7 @@ export default function AboutPage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('/images/izithakazelo.png')",
+            backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/izithakazelo.png')",
           }}
         />
         <div className="absolute inset-0 bg-black/50" />
@@ -47,7 +47,7 @@ export default function AboutPage() {
       {/* MAIN CONTENT - with features-bg.png as background */}
       <div 
         className="relative bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: "url('/images/features-bg.png')" }}
+        style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features-bg.png')" }}
       >
         {/* Dark overlay for readability */}
         <div className="bg-black/40 py-20">
@@ -81,7 +81,7 @@ export default function AboutPage() {
                 {/* Image: mission.png */}
                 <div className="relative bg-[#2b1d14] min-h-[300px] md:min-h-full">
                   <Image
-                    src="/images/mission.png"
+                    src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/mission.png"
                     alt="African cultural heritage"
                     fill
                     className="object-cover"
@@ -168,7 +168,7 @@ export default function AboutPage() {
                 <div className="absolute -inset-3 bg-gradient-to-r from-[#c26a2d]/20 to-[#d97706]/20 rounded-2xl blur-xl" />
                 <div className="relative rounded-2xl shadow-lg overflow-hidden h-[280px] w-full">
                   <Image
-                    src="/images/what.png"
+                    src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/what.png"
                     alt="African clan heritage and traditions"
                     fill
                     className="object-cover"

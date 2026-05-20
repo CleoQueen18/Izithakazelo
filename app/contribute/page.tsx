@@ -85,7 +85,7 @@ export default function ContributePage() {
     return (
       <div 
         className="min-h-screen bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: "url('/images/Contribute.png')" }}
+        style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Contribute.png')" }}
       >
         <div className="min-h-screen bg-black/40 backdrop-blur-sm flex items-center justify-center">
           <div className="max-w-2xl mx-auto px-6 py-20 text-center">
@@ -115,7 +115,7 @@ export default function ContributePage() {
   return (
     <div 
       className="min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/images/Contribute.png')" }}
+      style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Contribute.png')" }}
     >
       {/* Dark overlay for readability */}
       <div className="min-h-screen bg-black/40 backdrop-blur-sm">
