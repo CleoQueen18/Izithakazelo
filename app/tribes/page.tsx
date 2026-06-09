@@ -20,17 +20,17 @@ type Tribe = {
 // Map tribe names to their icon images
 const getTribeIcon = (tribeName: string): string => {
   const iconMap: Record<string, string> = {
-    Zulu: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/zulu.png",
-    Xhosa: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/xhosa.png",
-    Swati: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/swati.png",
-    Ndebele: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/ndebele.png",
-    Sotho: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/sotho.png",
-    Tswana: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tswana.png",
-    Venda: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/venda.png",
-    Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tsonga.png",
-    Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/pedi.png",
+    Zulu: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/zulu.png",
+    Xhosa: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/xhosa.png",
+    Swati: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/swati.png",
+    Ndebele: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/ndebele.png",
+    Sotho: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/sotho.png",
+    Tswana: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/tswana.png",
+    Venda: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/venda.png",
+    Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/tsonga.png",
+    Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/pedi.png",
   };
-  return iconMap[tribeName] || "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/default.png";
+  return iconMap[tribeName] || "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/default.png";
 };
 
 const tribeStyles: Record<
@@ -173,7 +173,7 @@ export default function TribesPage() {
   return (
     <div 
       className="min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Tribe2.png')" }}
+      style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/Tribe2.png')" }}
     >
       {/* Dark overlay for readability */}
       <div className="min-h-screen bg-black/50">

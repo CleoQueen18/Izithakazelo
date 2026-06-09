@@ -96,14 +96,14 @@ export default function ContactPage() {
   return (
     <div 
       className="min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features-bg.png')" }}
+      style={{ backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/features-bg.png')" }}
     >
       {/* Hero Section */}
       <section className="relative h-[280px] flex items-center justify-center">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/izithakazelo.png')",
+            backgroundImage: "url('https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png')",
           }}
         />
         <div className="absolute inset-0 bg-black/50" />

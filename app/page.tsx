@@ -11,25 +11,25 @@ const features = [
   {
     title: "Surnames & Clans",
     desc: "Find your izithakazelo and clan connections.",
-    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/surnames.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/surnames.png",
     alt: "Surnames and clans icon",
   },
   {
     title: "Praise Poems",
     desc: "Discover the poetry and praises of your people.",
-    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/praise.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/praise.png",
     alt: "Praise poems icon",
   },
   {
     title: "History & Lineage",
     desc: "Trace ancestry, roots, and generational stories.",
-    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/history.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/history.png",
     alt: "History and lineage icon",
   },
   {
     title: "Share Your Story",
     desc: "Help preserve family knowledge for future generations.",
-    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/share.png",
+    icon: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/share.png",
     alt: "Share your story icon",
   },
 ];
@@ -45,9 +45,9 @@ type FeaturedStory = {
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-const DEFAULT_STORY_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/default-story.png";
-const FEATURES_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/features-bg.png";
-const HERITAGE_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/heritage-bg.png";
+const DEFAULT_STORY_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/default-story.png";
+const FEATURES_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/features-bg.png";
+const HERITAGE_BG = "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/heritage-bg.png";
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -108,7 +108,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[85vh] min-h-[600px] overflow-hidden">
         <Image
-          src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/izithakazelo.png"
+          src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png"
           alt="Izithakazelo heritage background"
           fill
           priority
@@ -212,7 +212,7 @@ export default function HomePage() {
       <Link href="/clans" className="flex flex-col items-center gap-3 group">
         <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
           <img
-            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/roots1.png"
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/roots1.png"
             alt="Learn Your Roots"
             className="w-full h-full object-cover"
             style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
@@ -224,7 +224,7 @@ export default function HomePage() {
       <Link href="/clans#add-form" className="flex flex-col items-center gap-3 group">
         <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
           <img
-            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/share1.png"
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/share1.png"
             alt="Share Your Stories"
             className="w-full h-full object-cover"
             style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
@@ -236,7 +236,7 @@ export default function HomePage() {
       <Link href="/about" className="flex flex-col items-center gap-3 group">
         <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
           <img
-            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/connect1.png"
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/connect1.png"
             alt="Connect with Community"
             className="w-full h-full object-cover"
             style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}
