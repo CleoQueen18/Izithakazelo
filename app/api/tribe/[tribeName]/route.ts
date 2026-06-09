@@ -10,7 +10,6 @@ export async function GET(
   try {
     const { tribeName } = await params;
     
-    // Find all clans in this tribe
     const clans = await prisma.clan.findMany({
       where: {
         tribe: {
