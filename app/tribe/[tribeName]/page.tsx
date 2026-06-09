@@ -41,7 +41,7 @@ const getTribeBackground = (tribeName: string): string => {
     Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/tsonga1.png",
     Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/tribe-bg/pedi1.png",
   };
-  return bgMap[tribeName] || "/images/Tribe2.png";
+  return bgMap[tribeName] || "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1/Tribe2.png";
 };
 
 export default function TribeDetailPage() {
