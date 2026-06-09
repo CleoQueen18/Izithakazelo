@@ -10,12 +10,12 @@ export async function GET(
   try {
     const { tribeName } = await params;
     
+    // Capitalize first letter to match database format
+    const formattedTribeName = tribeName.charAt(0).toUpperCase() + tribeName.slice(1).toLowerCase();
+    
     const clans = await prisma.clan.findMany({
       where: {
-        tribe: {
-          equals: tribeName,
-          mode: 'insensitive',
-        },
+        tribe: formattedTribeName,
       },
       include: {
         surnames: {
@@ -26,13 +26,19 @@ export async function GET(
       },
     });
     
-    return NextResponse.json({
-      tribe: tribeName,
-      clans,
-      count: clans.length,
-    });
+    if (clans.length === 0) {
+      return NextResponse.json(
+        { error: `No clans found for tribe: ${tribeName}` },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json(clans);
   } catch (error) {
-    console.error("Error:", error);
-    return NextResponse.json({ error: "Failed to fetch tribes" }, { status: 500 });
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch tribe data" },
+      { status: 500 }
+    );
   }
 }
