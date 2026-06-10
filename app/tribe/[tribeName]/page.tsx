@@ -31,15 +31,15 @@ type Clan = {
 // Map tribe names to their background images
 const getTribeBackground = (tribeName: string): string => {
   const bgMap: Record<string, string> = {
-    Zulu: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915zulu1.png",
-    Xhosa: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915xhosa1.png",
-    Swati: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915swati1.png",
-    Ndebele: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915ndebele1.png",
-    Sotho: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915sotho1.png",
-    Tswana: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915tswana1.png",
-    Venda: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915venda1.png",
-    Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915tsonga1.png",
-    Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915pedi1.png",
+    Zulu: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/zulu1.png",
+    Xhosa: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/xhosa1.png",
+    Swati: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/swati1.png",
+    Ndebele: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/ndebele1.png",
+    Sotho: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/sotho1.png",
+    Tswana: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/tswana1.png",
+    Venda: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/venda1.png",
+    Tsonga: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/tsonga1.png",
+    Pedi: "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/pedi1.png",
   };
   return bgMap[tribeName] || "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/Tribe2.png";
 };
