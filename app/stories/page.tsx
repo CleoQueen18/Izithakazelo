@@ -101,7 +101,7 @@ export default function AllStoriesPage() {
               <p className="text-amber-400 text-xs uppercase tracking-wider">Featured Story</p>
             </div>
 
-            <Link href={`/${featuredStory.id}`}>
+            <Link href={`/stories/${featuredStory.id}`}>
               <div className="group bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden hover:border-amber-400/30 transition">
                 <div className="grid md:grid-cols-2">
                   <div className="relative h-64 md:h-auto">
@@ -161,7 +161,7 @@ export default function AllStoriesPage() {
           ) : (
             <div className="space-y-4">
               {filteredStories.map((story) => (
-                <Link key={story.id} href={`/${story.id}`}>
+                <Link key={story.id} href={`/stories/${story.id}`}>
                   <div className="group bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-5 hover:border-amber-400/30 hover:bg-white/10 transition">
                     {/* REMOVED: Image div section */}
                     <div className="flex-1">
