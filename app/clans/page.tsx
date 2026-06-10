@@ -372,8 +372,8 @@ function ClansContent() {
                                   "{item.clan_praise.substring(0, 80)}"
                                 </p>
                                 <div className="flex gap-3 text-amber-300/40 text-[10px] mt-1">
-                                  {item.surname.origin && <span>📍 {item.surname.origin}</span>}
-                                  {item.surname.language && <span>🗣️ {item.surname.language}</span>}
+                                  {item.surname.origin && <span> {item.surname.origin}</span>}
+                                  {item.surname.language && <span>{item.surname.language}</span>}
                                 </div>
                               </div>
                               <SocialShare
