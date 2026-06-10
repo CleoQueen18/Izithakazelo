@@ -1,74 +1,48 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET() {
   try {
-    const { id } = await params;
-    
-    const story = await prisma.featuredStory.findUnique({
-      where: { id: parseInt(id) },
+    const stories = await prisma.featuredStory.findMany({
+      orderBy: { displayOrder: "asc" },
       include: { clan: true },
     });
-    
-    if (!story) {
-      return NextResponse.json({ error: "Story not found" }, { status: 404 });
-    }
-    
-    return NextResponse.json(story);
+    return NextResponse.json(stories);
   } catch (error) {
-    console.error("Error:", error);
-    return NextResponse.json({ error: "Failed to fetch story" }, { status: 500 });
+    console.error("GET Featured Stories Error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch featured stories" },
+      { status: 500 }
+    );
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: Request) {
   try {
-    const { id } = await params;
     const body = await request.json();
+    const { title, summary, content, clanId, imageUrl, displayOrder, scheduledDate } = body;
     
-    const story = await prisma.featuredStory.update({
-      where: { id: parseInt(id) },
+    const story = await prisma.featuredStory.create({
       data: {
-        title: body.title,
-        summary: body.summary,
-        content: body.content,
-        clanId: body.clanId || null,
-        imageUrl: body.imageUrl || null,
-        displayOrder: body.displayOrder,
-        scheduledDate: body.scheduledDate ? new Date(body.scheduledDate) : null,
-        isActive: body.isActive,
+        title,
+        summary,
+        content,
+        clanId: clanId || null,
+        imageUrl: imageUrl || null,
+        displayOrder: displayOrder || 0,
+        scheduledDate: scheduledDate ? new Date(scheduledDate) : null,
+        isActive: true,
       },
     });
     
-    return NextResponse.json(story);
+    return NextResponse.json(story, { status: 201 });
   } catch (error) {
-    console.error("PUT Error:", error);
-    return NextResponse.json({ error: "Failed to update story" }, { status: 500 });
-  }
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    
-    await prisma.featuredStory.delete({
-      where: { id: parseInt(id) },
-    });
-    
-    return NextResponse.json({ message: "Story deleted successfully" });
-  } catch (error) {
-    console.error("DELETE Error:", error);
-    return NextResponse.json({ error: "Failed to delete story" }, { status: 500 });
+    console.error("POST Featured Story Error:", error);
+    return NextResponse.json(
+      { error: "Failed to create featured story" },
+      { status: 500 }
+    );
   }
 }
