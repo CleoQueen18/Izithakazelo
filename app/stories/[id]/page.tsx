@@ -49,7 +49,6 @@ export default function StoryDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const [showPrint, setShowPrint] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [headings, setHeadings] = useState<{ text: string; id: string }[]>([]);
 
@@ -71,7 +70,8 @@ export default function StoryDetailPage() {
     async function fetchStory() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/featured-${params.id}`);
+        // FIXED: Correct API endpoint path
+        const res = await fetch(`/api/featured-stories/${params.id}`);
         
         if (!res.ok) {
           if (res.status === 404) {
@@ -405,7 +405,7 @@ export default function StoryDetailPage() {
                 <h2 className="text-xl font-semibold text-white mb-6">Related Stories</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {relatedStories.map((related) => (
-                    <Link key={related.id} href={`/${related.id}`}>
+                    <Link key={related.id} href={`/stories/${related.id}`}>
                       <div className="bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4 hover:bg-white/20 transition group">
                         <h3 className="text-white font-semibold group-hover:text-amber-400 transition">
                           {related.title}
