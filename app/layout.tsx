@@ -1,11 +1,10 @@
+"use client";
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "Izithakazelo | Discover Your Heritage",
-  description: "Explore African clan names, praises, ancestry, and heritage stories.",
-};
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -18,38 +17,87 @@ const navLinks = [
   { href: "/about", label: "About" },
 ];
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" />
-      </head>
       <body className="bg-[#faf7f2] text-gray-800">
-        <nav className="sticky top-0 z-50 border-b border-amber-100 bg-white/90 backdrop-blur-md">
-          <div className="max-w-6xl mx-auto px-4 py-3">
-            <div className="text-center">
-              <Link href="/" className="text-xl font-bold text-gray-900 hover:text-amber-700 transition">
+        {/* NAV */}
+        <header className="sticky top-0 z-50 border-b border-amber-100 bg-white/90 backdrop-blur-md">
+          <nav className="max-w-6xl mx-auto px-4 py-3">
+            
+            {/* Top row */}
+            <div className="flex items-center justify-between">
+              <Link
+                href="/"
+                className="text-xl font-bold text-gray-900 hover:text-amber-700 transition"
+              >
                 Izithakazelo
               </Link>
+
+              {/* Hamburger button (mobile only) */}
+              <button
+                className="md:hidden text-2xl"
+                onClick={() => setOpen(!open)}
+                aria-label="Toggle menu"
+              >
+                {open ? "✕" : "☰"}
+              </button>
             </div>
-            <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-2">
+
+            {/* Desktop nav */}
+            <div className="hidden md:flex justify-center gap-4 mt-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-xs text-gray-600 hover:text-amber-700 transition"
+                  className={`text-xs transition ${
+                    pathname === link.href
+                      ? "text-amber-700 font-semibold"
+                      : "text-gray-600 hover:text-amber-700"
+                  }`}
                 >
                   {link.label}
                 </Link>
               ))}
             </div>
-          </div>
-        </nav>
 
-        <main className="min-h-screen">{children}</main>
+            {/* Mobile dropdown */}
+            {open && (
+              <div className="md:hidden mt-3 flex flex-col gap-3 border-t border-amber-100 pt-3">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className={`text-sm py-1 ${
+                      pathname === link.href
+                        ? "text-amber-700 font-semibold"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </nav>
+        </header>
 
+        {/* PAGE CONTENT */}
+        <main className="min-h-screen px-4">{children}</main>
+
+        {/* FOOTER */}
         <footer className="mt-12 border-t border-amber-100 bg-white py-6 text-center text-xs text-gray-500">
-          <p>© 2026 Izithakazelo — Preserving African Heritage</p>
+          <p>
+            © {new Date().getFullYear()} Izithakazelo — Preserving African Heritage
+          </p>
         </footer>
       </body>
     </html>

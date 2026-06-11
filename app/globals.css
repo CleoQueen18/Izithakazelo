@@ -347,4 +347,11 @@
   .story-content .praise-text {
     font-size: 0.85rem;
   }
+
+  @media (max-width: 480px) {
+  nav a {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
 }
