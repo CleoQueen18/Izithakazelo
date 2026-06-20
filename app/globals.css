@@ -347,11 +347,44 @@
   .story-content .praise-text {
     font-size: 0.85rem;
   }
+}
 
-  @media (max-width: 480px) {
+/* Mobile navigation fix - make links smaller on narrow phones */
+@media (max-width: 480px) {
   nav a {
     font-size: 10px;
     padding: 4px 6px;
   }
 }
+
+/* ========== ALPHABET BUTTONS FIX ========== */
+/* Make alphabet buttons scrollable and smaller on mobile */
+@media (max-width: 480px) {
+  .flex-wrap.justify-center.gap-1\\.5 {
+    gap: 4px;
+  }
+  
+  .w-9.h-9 {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  
+  .flex-wrap.justify-center {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 4px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .flex-wrap.justify-center::-webkit-scrollbar {
+    height: 2px;
+  }
+  
+  .flex-wrap.justify-center::-webkit-scrollbar-thumb {
+    background: #d4a017;
+    border-radius: 10px;
+  }
 }
