@@ -15,8 +15,12 @@ type Contribution = {
   createdAt: string;
 };
 
+const ADMIN_PASSWORD = "your-strong-password-here"; // Change this!
+
 export default function AdminPage() {
   const router = useRouter();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
@@ -24,9 +28,26 @@ export default function AdminPage() {
   const [filter, setFilter] = useState("PENDING");
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
+  // Check authentication on load
   useEffect(() => {
-    fetchContributions();
+    const auth = sessionStorage.getItem("adminAuth");
+    if (auth === "true") {
+      setAuthenticated(true);
+      fetchContributions();
+    } else {
+      setLoading(false);
+    }
   }, []);
+
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem("adminAuth", "true");
+      setAuthenticated(true);
+      fetchContributions();
+    } else {
+      alert("Incorrect password");
+    }
+  };
 
   async function fetchContributions() {
     try {
@@ -81,8 +102,9 @@ export default function AdminPage() {
   }
 
   async function handleLogout() {
-    await fetch("/api/auth", { method: "DELETE" });
-    router.push("/login");
+    sessionStorage.removeItem("adminAuth");
+    setAuthenticated(false);
+    router.push("/");
   }
 
   const filteredContributions = contributions.filter(c => 
@@ -93,6 +115,33 @@ export default function AdminPage() {
   const approvedCount = contributions.filter(c => c.status === "APPROVED").length;
   const rejectedCount = contributions.filter(c => c.status === "REJECTED").length;
 
+  // Show login screen if not authenticated
+  if (!authenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full">
+          <h1 className="text-2xl font-bold text-center mb-2">Admin Access</h1>
+          <p className="text-gray-500 text-center mb-6">Enter password to continue</p>
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            className="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-amber-500"
+          />
+          <button
+            onClick={handleLogin}
+            className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-medium transition"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading after authentication
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-6 py-20 text-center">
@@ -102,6 +151,7 @@ export default function AdminPage() {
     );
   }
 
+  // Admin content
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
       {/* Header with Logout Button */}
