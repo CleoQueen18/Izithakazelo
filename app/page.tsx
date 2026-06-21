@@ -90,7 +90,8 @@ export default function HomePage() {
     router.push(`/clans?letter=${letter}`);
   };
 
-  const displayStories = featuredStories.length > 0 ? featuredStories : [
+  // SHOW ONLY ONE FEATURED STORY
+  const displayStories = featuredStories.length > 0 ? featuredStories.slice(0, 1) : [
     {
       id: 1,
       title: "The Legacy of the Khumalo Clan",
@@ -161,7 +162,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Featured Stories */}
+      {/* Featured Stories - ONLY ONE */}
       {!loading && displayStories.map((story) => (
         <div key={story.id} className="relative w-full overflow-hidden shadow-lg">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${story.imageUrl || DEFAULT_STORY_BG}')` }} />
@@ -205,52 +206,52 @@ export default function HomePage() {
         </div>
       </div>
 
-   {/* Footer */}
-<div className="border-t border-amber-100 py-16">
-  <div className="max-w-6xl mx-auto px-6">
-    <div className="flex flex-wrap justify-center items-center gap-12 mb-8">
-      <Link href="/clans" className="flex flex-col items-center gap-3 group">
-        <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
-          <img
-            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/roots1.png"
-            alt="Learn Your Roots"
-            className="w-full h-full object-cover"
-            style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
-          />
+      {/* Footer */}
+      <div className="border-t border-amber-100 py-16">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex flex-wrap justify-center items-center gap-12 mb-8">
+            <Link href="/clans" className="flex flex-col items-center gap-3 group">
+              <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
+                <img
+                  src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/roots1.png"
+                  alt="Learn Your Roots"
+                  className="w-full h-full object-cover"
+                  style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
+                />
+              </div>
+              <span className="text-sm text-gray-600 group-hover:text-amber-700 transition font-medium">Learn Your Roots</span>
+            </Link>
+            
+            <Link href="/clans#add-form" className="flex flex-col items-center gap-3 group">
+              <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
+                <img
+                  src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/share1.png"
+                  alt="Share Your Stories"
+                  className="w-full h-full object-cover"
+                  style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
+                />
+              </div>
+              <span className="text-sm text-gray-600 group-hover:text-amber-700 transition font-medium">Share Your Stories</span>
+            </Link>
+            
+            <Link href="/about" className="flex flex-col items-center gap-3 group">
+              <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
+                <img
+                  src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/connect1.png"
+                  alt="Connect with Community"
+                  className="w-full h-full object-cover"
+                  style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}
+                />
+              </div>
+              <span className="text-sm text-gray-600 group-hover:text-amber-700 transition font-medium">Connect with Community</span>
+            </Link>
+          </div>
+          
+          <div className="text-center text-xs text-gray-400 mt-8 pt-6 border-t border-amber-50">
+            <p>© 2026 Izithakazelo — Preserving African Heritage</p>
+          </div>
         </div>
-        <span className="text-sm text-gray-600 group-hover:text-amber-700 transition font-medium">Learn Your Roots</span>
-      </Link>
-      
-      <Link href="/clans#add-form" className="flex flex-col items-center gap-3 group">
-        <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
-          <img
-            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/share1.png"
-            alt="Share Your Stories"
-            className="w-full h-full object-cover"
-            style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
-          />
-        </div>
-        <span className="text-sm text-gray-600 group-hover:text-amber-700 transition font-medium">Share Your Stories</span>
-      </Link>
-      
-      <Link href="/about" className="flex flex-col items-center gap-3 group">
-        <div className="w-32 h-32 rounded-full overflow-hidden shadow-md">
-          <img
-            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/connect1.png"
-            alt="Connect with Community"
-            className="w-full h-full object-cover"
-            style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}
-          />
-        </div>
-        <span className="text-sm text-gray-600 group-hover:text-amber-700 transition font-medium">Connect with Community</span>
-      </Link>
-    </div>
-    
-    <div className="text-center text-xs text-gray-400 mt-8 pt-6 border-t border-amber-50">
-      <p>© 2026 Izithakazelo — Preserving African Heritage</p>
-    </div>
-  </div>
-</div>
+      </div>
     </div>
   );
 }
