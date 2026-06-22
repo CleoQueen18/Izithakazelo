@@ -127,15 +127,30 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - ORIGINAL LAYOUT RESTORED */}
+          {/* Alphabet buttons with Browse label */}
           <div className="mt-8 w-full max-w-2xl">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-              <p className="text-white/70 text-xs uppercase tracking-wider mb-3 text-center">Browse by Surname Letter</p>
-              <div className="flex flex-wrap justify-center gap-1.5">
-                {alphabet.map((letter) => (
-                  <button key={letter} onClick={() => handleLetterClick(letter)} className="w-9 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 hover:scale-105">{letter}</button>
-                ))}
-                <button onClick={() => handleLetterClick("")} className="px-3 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 ml-2">All</button>
+              <p className="text-white/70 text-xs uppercase tracking-wider mb-3 text-center">
+                Browse by Surname Letter
+              </p>
+              <div className="w-full overflow-x-auto overflow-y-hidden pb-2 scroll-smooth">
+                <div className="flex gap-1.5 min-w-max">
+                  {alphabet.map((letter) => (
+                    <button
+                      key={letter}
+                      onClick={() => handleLetterClick(letter)}
+                      className="w-9 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 hover:scale-105 flex-shrink-0"
+                    >
+                      {letter}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => handleLetterClick("")}
+                    className="px-3 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 ml-2 flex-shrink-0"
+                  >
+                    All
+                  </button>
+                </div>
               </div>
             </div>
           </div>
