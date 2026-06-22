@@ -15,14 +15,12 @@ type Contribution = {
   createdAt: string;
 };
 
-const ADMIN_PASSWORD = "your-strong-password-here"; // Change this!
-
 export default function AdminPage() {
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
-  const [contributions, setContributions] = useState<Contribution[]>([]);
   const [loading, setLoading] = useState(true);
+  const [contributions, setContributions] = useState<Contribution[]>([]);
   const [selectedContribution, setSelectedContribution] = useState<Contribution | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
   const [filter, setFilter] = useState("PENDING");
@@ -30,34 +28,60 @@ export default function AdminPage() {
 
   // Check authentication on load
   useEffect(() => {
-    const auth = sessionStorage.getItem("adminAuth");
-    if (auth === "true") {
-      setAuthenticated(true);
-      fetchContributions();
-    } else {
-      setLoading(false);
-    }
+    checkAuth();
   }, []);
 
-  const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem("adminAuth", "true");
-      setAuthenticated(true);
-      fetchContributions();
-    } else {
-      alert("Incorrect password");
+  const checkAuth = async () => {
+    try {
+      const res = await fetch("/api/admin/check");
+      if (res.ok) {
+        setAuthenticated(true);
+        fetchContributions();
+      } else {
+        setAuthenticated(false);
+      }
+    } catch (error) {
+      setAuthenticated(false);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+
+      if (res.ok) {
+        setAuthenticated(true);
+        fetchContributions();
+        setPassword("");
+      } else {
+        alert("Incorrect password");
+      }
+    } catch (error) {
+      alert("Login failed");
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch("/api/admin/login", { method: "DELETE" });
+    setAuthenticated(false);
+    router.push("/");
   };
 
   async function fetchContributions() {
     try {
       setLoading(true);
       const res = await fetch("/api/admin/contributions");
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setContributions(data);
     } catch (error) {
-      console.error("Fetch error:", error);
-      setNotification({ type: "error", message: "Failed to load contributions." });
+      setNotification({ type: "error", message: "Failed to load contributions" });
     } finally {
       setLoading(false);
     }
@@ -70,44 +94,35 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status, adminNotes }),
       });
-      
+
       if (!res.ok) throw new Error("Failed to update");
-      
+
       setNotification({ type: "success", message: `Contribution ${status.toLowerCase()} successfully!` });
       setSelectedContribution(null);
       setAdminNotes("");
       fetchContributions();
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
-      setNotification({ type: "error", message: "Failed to update contribution." });
+      setNotification({ type: "error", message: "Failed to update contribution" });
     }
   }
 
   async function deleteContribution(id: number) {
-    if (!confirm("Are you sure you want to delete this contribution?")) return;
-    
+    if (!confirm("Are you sure?")) return;
+
     try {
-      const res = await fetch(`/api/admin/contributions?id=${id}`, {
-        method: "DELETE",
-      });
-      
+      const res = await fetch(`/api/admin/contributions?id=${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete");
-      
-      setNotification({ type: "success", message: "Contribution deleted successfully!" });
+
+      setNotification({ type: "success", message: "Deleted successfully!" });
       fetchContributions();
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
-      setNotification({ type: "error", message: "Failed to delete contribution." });
+      setNotification({ type: "error", message: "Failed to delete" });
     }
   }
 
-  async function handleLogout() {
-    sessionStorage.removeItem("adminAuth");
-    setAuthenticated(false);
-    router.push("/");
-  }
-
-  const filteredContributions = contributions.filter(c => 
+  const filteredContributions = contributions.filter(c =>
     filter === "ALL" || c.status === filter
   );
 
@@ -115,7 +130,14 @@ export default function AdminPage() {
   const approvedCount = contributions.filter(c => c.status === "APPROVED").length;
   const rejectedCount = contributions.filter(c => c.status === "REJECTED").length;
 
-  // Show login screen if not authenticated
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-700 border-t-transparent" />
+      </div>
+    );
+  }
+
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -141,50 +163,22 @@ export default function AdminPage() {
     );
   }
 
-  // Show loading after authentication
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-700 border-t-transparent mx-auto" />
-        <p className="mt-4 text-gray-500">Loading admin dashboard...</p>
-      </div>
-    );
-  }
-
-  // Admin content
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
-      {/* Header with Logout Button */}
       <div className="flex justify-between items-center mb-8">
         <div>
-          <button
-            onClick={() => router.back()}
-            className="text-gray-500 hover:text-amber-700 transition text-sm"
-          >
-            ← Back
-          </button>
-          <h1 className="text-3xl font-semibold text-gray-800 mt-2">Admin Dashboard</h1>
-          <p className="text-gray-500 mt-1">Manage user contributions to the heritage archive</p>
+          <h1 className="text-3xl font-semibold text-gray-800">Admin Dashboard</h1>
+          <p className="text-gray-500 mt-1">Manage user contributions</p>
           <div className="w-16 h-1 bg-amber-600 mt-4 rounded-full" />
         </div>
-        
-        <div className="flex gap-3">
-          <Link
-            href="/admin/stories"
-            className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-xl transition font-medium"
-          >
-            Manage Stories
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl transition font-medium"
-          >
-            Logout
-          </button>
-        </div>
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl transition"
+        >
+          Logout
+        </button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-200">
           <div className="text-2xl font-bold text-yellow-700">{pendingCount}</div>
@@ -200,14 +194,12 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Notification */}
       {notification && (
         <div className={`mb-6 p-4 rounded-xl ${notification.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
           {notification.message}
         </div>
       )}
 
-      {/* Filter Tabs */}
       <div className="flex gap-2 mb-6 border-b border-amber-100">
         {["PENDING", "APPROVED", "REJECTED", "ALL"].map((tab) => (
           <button
@@ -224,7 +216,6 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {/* Contributions List */}
       {filteredContributions.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl border border-amber-100">
           <p className="text-gray-500">No contributions found.</p>
@@ -238,7 +229,7 @@ export default function AdminPage() {
             } catch {
               data = { error: "Invalid JSON" };
             }
-            
+
             return (
               <div key={contribution.id} className="bg-white rounded-2xl border border-amber-100 overflow-hidden shadow-sm">
                 <div className="p-5">
@@ -282,7 +273,7 @@ export default function AdminPage() {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="bg-gray-50 rounded-xl p-3 mt-2">
                     <pre className="text-xs text-gray-600 whitespace-pre-wrap font-mono">
                       {JSON.stringify(data, null, 2)}
@@ -295,7 +286,6 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Review Modal */}
       {selectedContribution && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
@@ -309,13 +299,13 @@ export default function AdminPage() {
                   ✕
                 </button>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                   <p className="text-gray-600">{selectedContribution.type.replace("_", " ")}</p>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Data</label>
                   <div className="bg-gray-50 rounded-xl p-3">
@@ -324,7 +314,7 @@ export default function AdminPage() {
                     </pre>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Contributor</label>
                   <p className="text-gray-600">{selectedContribution.contributorName}</p>
@@ -332,18 +322,18 @@ export default function AdminPage() {
                     <p className="text-sm text-gray-400">{selectedContribution.contributorEmail}</p>
                   )}
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin Notes (Optional)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin Notes</label>
                   <textarea
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
                     rows={3}
-                    placeholder="Add any notes about this decision..."
+                    placeholder="Add notes about this decision..."
                     className="w-full px-4 py-3 border border-amber-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
-                
+
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => updateStatus(selectedContribution.id, "APPROVED")}
