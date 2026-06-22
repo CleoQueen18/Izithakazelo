@@ -90,8 +90,9 @@ export default function RootLayout({
         </header>
 
         {/* PAGE CONTENT */}
-        <main className="min-h-screen px-4">{children}</main>
-
+         <main className="min-h-screen">
+          {children}
+        </main>
         {/* FOOTER */}
         <footer className="mt-12 border-t border-amber-100 bg-white py-6 text-center text-xs text-gray-500">
           <p>
