@@ -161,22 +161,25 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* ALPHABET (mobile scroll, desktop grid) */}
+          {/* ALPHABET - wraps on both PC and mobile */}
           <div className="mt-6 w-full max-w-2xl">
             <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl">
-              <div className="flex gap-2 overflow-x-auto md:flex-wrap md:justify-center">
+              <p className="text-white/70 text-xs uppercase tracking-wider mb-3 text-center">
+                Browse by Surname Letter
+              </p>
+              <div className="flex flex-wrap justify-center gap-1.5">
                 {alphabet.map((letter) => (
                   <button
                     key={letter}
                     onClick={() => handleLetterClick(letter)}
-                    className="min-w-[36px] h-9 rounded-full bg-white/20 text-white text-sm hover:bg-amber-600"
+                    className="w-9 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 hover:scale-105"
                   >
                     {letter}
                   </button>
                 ))}
                 <button
                   onClick={() => router.push("/clans")}
-                  className="min-w-[50px] h-9 rounded-full bg-white/20 text-white text-sm ml-2"
+                  className="px-4 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200"
                 >
                   All
                 </button>
