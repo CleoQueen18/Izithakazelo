@@ -161,7 +161,7 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* ALPHABET - wraps on both PC and mobile */}
+          {/* ALPHABET - WRAPS LIKE PC */}
           <div className="mt-6 w-full max-w-2xl">
             <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl">
               <p className="text-white/70 text-xs uppercase tracking-wider mb-3 text-center">
