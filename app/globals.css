@@ -388,3 +388,21 @@
     border-radius: 10px;
   }
 }
+/* Alphabet buttons - scrollable on mobile */
+@media (max-width: 480px) {
+  .flex-wrap.justify-center.gap-1\\.5 {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  
+  .w-9.h-9 {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
+    flex-shrink: 0 !important;
+  }
+}
