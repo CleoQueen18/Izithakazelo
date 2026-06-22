@@ -13,7 +13,6 @@ const navLinks = [
   { href: "/clans", label: "Clans" },
   { href: "/contribute", label: "Contribute" },
   { href: "/contact", label: "Contact" },
-  { href: "/admin", label: "Admin" },
   { href: "/about", label: "About" },
 ];
 
