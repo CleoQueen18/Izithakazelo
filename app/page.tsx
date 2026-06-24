@@ -60,13 +60,13 @@ type FeaturedStory = {
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 const DEFAULT_STORY_BG =
-  "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/default-story.png";
+  "/images/stories/default-story.png";
 
 const FEATURES_BG =
-  "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/features-bg.png";
+  "/images/features-bg.png";
 
 const HERITAGE_BG =
-  "https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/heritage-bg.png";
+  "/images/heritage-bg.png";
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -128,7 +128,7 @@ export default function HomePage() {
       {/* HERO SECTION */}
       <section className="relative min-h-[500px] h-[70vh] md:h-[85vh] overflow-hidden">
         <Image
-          src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png"
+          src="/images/izithakazelo.png"
           alt="Izithakazelo background"
           fill
           priority
