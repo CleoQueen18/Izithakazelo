@@ -265,12 +265,58 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* FOOTER */}
-      <footer className="text-center text-xs md:text-sm py-10 text-gray-500 border-t border-amber-100">
-        <Container>
-          <p>© 2026 Izithakazelo — Preserving African Heritage</p>
-        </Container>
-      </footer>
+            {/* FOOTER WITH ICONS */}
+<footer className="border-t border-amber-100 py-16">
+  <Container>
+    <div className="flex flex-wrap justify-center items-center gap-12 mb-8">
+      <Link href="/clans" className="flex flex-col items-center gap-3 group">
+        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-md">
+          <img
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/roots1.png"
+            alt="Learn Your Roots"
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
+          />
+        </div>
+        <span className="text-xs sm:text-sm text-gray-600 group-hover:text-amber-700 transition font-medium text-center">
+          Learn Your Roots
+        </span>
+      </Link>
+
+      <Link href="/clans#add-form" className="flex flex-col items-center gap-3 group">
+        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-md">
+          <img
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/share1.png"
+            alt="Share Your Stories"
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(2.1)', transformOrigin: 'center' }}
+          />
+        </div>
+        <span className="text-xs sm:text-sm text-gray-600 group-hover:text-amber-700 transition font-medium text-center">
+          Share Your Stories
+        </span>
+      </Link>
+
+      <Link href="/about" className="flex flex-col items-center gap-3 group">
+        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-md">
+          <img
+            src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/connect1.png"
+            alt="Connect with Community"
+            className="w-full h-full object-cover"
+            style={{ transform: 'scale(2.2)', transformOrigin: 'center' }}
+          />
+        </div>
+        <span className="text-xs sm:text-sm text-gray-600 group-hover:text-amber-700 transition font-medium text-center">
+          Connect with Community
+        </span>
+      </Link>
+    </div>
+
+    <div className="text-center text-xs text-gray-400 mt-8 pt-6 border-t border-amber-50">
+      <p>© 2026 Izithakazelo — Preserving African Heritage</p>
+    </div>
+  </Container>
+</footer>
     </div>
   );
 }
