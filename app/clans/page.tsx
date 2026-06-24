@@ -226,11 +226,12 @@ function ClansContent() {
             </div>
           </div>
 
+          {/* Alphabet - Fixed for mobile */}
           <div className="bg-[#2b1d14]/70 backdrop-blur-sm rounded-xl border border-amber-800/30 p-3 mb-4">
             <p className="text-amber-300/60 text-[10px] uppercase tracking-wider mb-2 text-center">
               Filter by Surname Letter
             </p>
-            <div className="flex flex-wrap justify-center gap-1">
+            <div className="flex flex-wrap justify-center gap-1 max-w-sm mx-auto">
               {alphabet.map((letter) => (
                 <button
                   key={letter}
