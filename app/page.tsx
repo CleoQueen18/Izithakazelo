@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Container from "@/app/components/Container";
+import Grid from "@/app/components/Grid";
+import Section from "@/app/components/Section";
+import { Heading, Paragraph } from "@/app/components/Typography";
 
 const tribes = [
   "Zulu",
@@ -121,8 +125,8 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#faf7f2] text-gray-800">
-      {/* HERO */}
-      <section className="relative h-[70vh] md:h-[85vh] min-h-[500px] overflow-hidden">
+      {/* HERO SECTION */}
+      <section className="relative min-h-[500px] h-[70vh] md:h-[85vh] overflow-hidden">
         <Image
           src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png"
           alt="Izithakazelo background"
@@ -137,14 +141,13 @@ export default function HomePage() {
             Heritage • Identity • Legacy
           </p>
 
-          <h1 className="text-4xl md:text-7xl font-semibold text-white mb-3">
+          <Heading level={1} className="text-white">
             Izithakazelo
-          </h1>
+          </Heading>
 
-          <p className="text-sm md:text-xl text-gray-200 max-w-2xl mb-8">
-            Discover your roots, celebrate your clan, and preserve African
-            heritage.
-          </p>
+          <Paragraph className="text-gray-200 max-w-2xl mb-8 text-center text-sm md:text-lg">
+            Discover your roots, celebrate your clan, and preserve African heritage.
+          </Paragraph>
 
           {/* SEARCH */}
           <form onSubmit={handleSearch} className="w-full max-w-lg">
@@ -155,13 +158,13 @@ export default function HomePage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button className="bg-amber-700 text-white px-5 md:px-8 text-sm md:text-base">
+              <button className="bg-amber-700 hover:bg-amber-800 text-white px-5 md:px-8 text-sm md:text-base transition">
                 Search
               </button>
             </div>
           </form>
 
-          {/* ALPHABET - WRAPS LIKE PC */}
+          {/* ALPHABET - Responsive wrapping */}
           <div className="mt-6 w-full max-w-2xl">
             <div className="bg-white/10 backdrop-blur-sm p-3 rounded-xl">
               <p className="text-white/70 text-xs uppercase tracking-wider mb-3 text-center">
@@ -172,14 +175,14 @@ export default function HomePage() {
                   <button
                     key={letter}
                     onClick={() => handleLetterClick(letter)}
-                    className="w-9 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 hover:scale-105"
+                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105"
                   >
                     {letter}
                   </button>
                 ))}
                 <button
                   onClick={() => router.push("/clans")}
-                  className="px-4 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200"
+                  className="px-3 sm:px-4 h-8 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium transition-all duration-200"
                 >
                   All
                 </button>
@@ -189,119 +192,84 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section
-        className="relative bg-cover bg-center"
-        style={{ backgroundImage: `url(${FEATURES_BG})` }}
-      >
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-14 md:py-20">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {features.map((f) => (
-              <div
-                key={f.title}
-                className="bg-white rounded-xl p-5 text-center"
-              >
-                <Image
-                  src={f.icon}
-                  alt={f.alt}
-                  width={60}
-                  height={60}
-                  className="mx-auto mb-3"
-                />
-                <h3 className="font-semibold">{f.title}</h3>
-                <p className="text-sm text-gray-500 mt-1">{f.desc}</p>
-              </div>
-            ))}
-          </div>
+      {/* FEATURES SECTION */}
+      <Section bg="none" padding="xl" className="relative">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${FEATURES_BG})` }} />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
-      </section>
+        <Grid cols={4} gap="md">
+          {features.map((feature) => (
+            <div key={feature.title} className="bg-white rounded-xl p-5 text-center hover:shadow-lg transition">
+              <Image src={feature.icon} alt={feature.alt} width={60} height={60} className="mx-auto mb-3" />
+              <h3 className="font-semibold text-gray-800">{feature.title}</h3>
+              <p className="text-sm text-gray-500 mt-1">{feature.desc}</p>
+            </div>
+          ))}
+        </Grid>
+      </Section>
 
       {/* FEATURED STORY */}
       {!loading &&
         displayStories.map((story) => (
-          <section
-            key={story.id}
-            className="relative"
-            style={{
-              backgroundImage: `url(${
-                story.imageUrl || DEFAULT_STORY_BG
-              })`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
+          <section key={story.id} className="relative py-16 md:py-20">
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${story.imageUrl || DEFAULT_STORY_BG})` }} />
             <div className="absolute inset-0 bg-black/60" />
 
-            <div className="relative z-10 px-4 md:px-6 py-14 md:py-20 max-w-4xl mx-auto">
-              <p className="text-amber-300 uppercase text-xs tracking-widest">
-                Featured Story
-              </p>
-
-              <h2 className="text-2xl md:text-4xl text-white font-bold mt-2">
-                {story.title}
-              </h2>
-
-              <p className="text-gray-200 mt-4">{story.summary}</p>
-
-              <Link
-                href={`/${story.id}`}
-                className="inline-block mt-6 bg-amber-600 px-6 py-2 rounded-full text-white"
-              >
-                Read More →
-              </Link>
-            </div>
+            <Container className="relative z-10">
+              <div className="max-w-2xl">
+                <p className="text-amber-300 uppercase text-xs tracking-widest">Featured Story</p>
+                <h2 className="text-2xl md:text-3xl lg:text-4xl text-white font-bold mt-2">{story.title}</h2>
+                <p className="text-gray-200 mt-4 text-sm md:text-base">{story.summary}</p>
+                <Link
+                  href={`/${story.id}`}
+                  className="inline-block mt-6 bg-amber-600 hover:bg-amber-700 px-6 py-2 rounded-full text-white text-sm md:text-base transition"
+                >
+                  Read More →
+                </Link>
+              </div>
+            </Container>
           </section>
         ))}
 
-      {/* TRIBES */}
-      <section
-        className="relative bg-cover bg-center"
-        style={{ backgroundImage: `url(${FEATURES_BG})` }}
-      >
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 text-center py-14 px-4">
-          <h2 className="text-white uppercase tracking-widest mb-6">
-            Browse by Tribe
-          </h2>
-
+      {/* TRIBES SECTION */}
+      <Section bg="none" padding="xl" className="relative">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${FEATURES_BG})` }} />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+        <div className="text-center">
+          <p className="text-white uppercase tracking-widest text-sm mb-6">Browse by Tribe</p>
           <div className="flex flex-wrap justify-center gap-3">
-            {tribes.map((t) => (
+            {tribes.map((tribe) => (
               <Link
-                key={t}
-                href={`/tribe/${t.toLowerCase()}`}
-                className="bg-white px-4 py-2 rounded-full text-sm"
+                key={tribe}
+                href={`/tribe/${tribe.toLowerCase()}`}
+                className="bg-white hover:bg-amber-50 px-4 py-2 rounded-full text-sm md:text-base transition"
               >
-                {t}
+                {tribe}
               </Link>
             ))}
           </div>
         </div>
-      </section>
+      </Section>
 
-      {/* HERITAGE */}
-      <section className="relative">
-        <Image
-          src={HERITAGE_BG}
-          alt="heritage"
-          fill
-          className="object-cover"
-        />
+      {/* HERITAGE SECTION */}
+      <section className="relative py-16 md:py-20">
+        <Image src={HERITAGE_BG} alt="heritage" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/60" />
 
-        <div className="relative z-10 px-4 md:px-6 py-16 max-w-4xl mx-auto text-white">
-          <h2 className="text-2xl md:text-4xl font-bold">
-            Preserving Our Heritage
-          </h2>
-          <p className="mt-3 text-amber-200">
-            Honoring our past, guiding our future.
-          </p>
-        </div>
+        <Container className="relative z-10">
+          <h2 className="text-2xl md:text-4xl text-white font-bold">Preserving Our Heritage</h2>
+          <p className="mt-3 text-amber-200 text-sm md:text-base">Honoring our past, guiding our future.</p>
+        </Container>
       </section>
 
       {/* FOOTER */}
-      <footer className="text-center text-xs py-10 text-gray-500">
-        © 2026 Izithakazelo — Preserving African Heritage
+      <footer className="text-center text-xs md:text-sm py-10 text-gray-500 border-t border-amber-100">
+        <Container>
+          <p>© 2026 Izithakazelo — Preserving African Heritage</p>
+        </Container>
       </footer>
     </div>
   );
