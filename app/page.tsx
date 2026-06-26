@@ -105,14 +105,14 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#faf7f2] text-gray-800">
-      {/* Hero Section */}
-      <section className="relative h-[85vh] min-h-[600px] overflow-hidden">
+      {/* Hero Section - Fixed for mobile */}
+      <section className="relative h-[60vh] sm:h-[85vh] min-h-[400px] overflow-hidden">
         <Image
           src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png"
           alt="Izithakazelo heritage background"
           fill
           priority
-          className="object-cover"
+          className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 max-w-6xl mx-auto px-6 h-full flex flex-col justify-center items-center text-center">
@@ -127,14 +127,26 @@ export default function HomePage() {
             </div>
           </form>
 
+          {/* Alphabet - Fixed for mobile */}
           <div className="mt-8 w-full max-w-2xl">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
               <p className="text-white/70 text-xs uppercase tracking-wider mb-3 text-center">Browse by Surname Letter</p>
-              <div className="flex flex-wrap justify-center gap-1.5">
+              <div className="flex flex-wrap justify-center gap-1.5 max-w-sm mx-auto">
                 {alphabet.map((letter) => (
-                  <button key={letter} onClick={() => handleLetterClick(letter)} className="w-9 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 hover:scale-105">{letter}</button>
+                  <button
+                    key={letter}
+                    onClick={() => handleLetterClick(letter)}
+                    className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105"
+                  >
+                    {letter}
+                  </button>
                 ))}
-                <button onClick={() => handleLetterClick("")} className="px-3 h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-sm font-medium transition-all duration-200 ml-2">All</button>
+                <button
+                  onClick={() => handleLetterClick("")}
+                  className="px-2 sm:px-4 h-7 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium transition-all duration-200"
+                >
+                  All
+                </button>
               </div>
             </div>
           </div>
