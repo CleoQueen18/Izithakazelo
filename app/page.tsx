@@ -148,27 +148,27 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - ULTRA REFINED FOR MOBILE */}
+          {/* Alphabet - COMPACT AND CLEAN */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
               
-              {/* Mobile-first grid with precise sizing */}
-              <div className="grid grid-cols-6 xs:grid-cols-7 sm:grid-cols-9 gap-1 sm:gap-1.5 max-w-full mx-auto">
+              {/* More columns = smaller buttons */}
+              <div className="grid grid-cols-7 xs:grid-cols-8 sm:grid-cols-9 md:grid-cols-10 gap-1 sm:gap-1.5 max-w-full mx-auto">
                 {alphabet.map((letter) => (
                   <button
                     key={letter}
                     onClick={() => handleLetterClick(letter)}
-                    className="aspect-square w-full rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[11px] xs:text-xs sm:text-sm min-h-[30px] xs:min-h-[32px] sm:min-h-[36px]"
+                    className="aspect-square w-full rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm min-h-[28px] xs:min-h-[30px] sm:min-h-[36px]"
                   >
                     {letter}
                   </button>
                 ))}
                 <button
                   onClick={() => handleLetterClick("")}
-                  className="col-span-2 xs:col-span-1 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 flex items-center justify-center text-[11px] xs:text-xs sm:text-sm min-h-[30px] xs:min-h-[32px] sm:min-h-[36px] px-1 xs:px-2"
+                  className="col-span-2 xs:col-span-1 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm min-h-[28px] xs:min-h-[30px] sm:min-h-[36px] px-1.5 xs:px-2"
                 >
                   All
                 </button>
