@@ -148,32 +148,30 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - FIXED CUTOFF ISSUE */}
+          {/* Alphabet - COMPLETE REDESIGN WITH FLEXBOX */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20 overflow-hidden">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
               
-              {/* Added overflow-hidden and proper padding to prevent cutoff */}
-              <div className="w-full overflow-hidden px-0.5 sm:px-1">
-                <div className="grid grid-cols-7 xs:grid-cols-8 sm:grid-cols-9 md:grid-cols-10 gap-1 sm:gap-1.5 max-w-full mx-auto">
-                  {alphabet.map((letter) => (
-                    <button
-                      key={letter}
-                      onClick={() => handleLetterClick(letter)}
-                      className="aspect-square w-full min-w-[24px] rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm h-7 xs:h-8 sm:h-9"
-                    >
-                      {letter}
-                    </button>
-                  ))}
+              {/* Using flexbox with smaller max-width to guarantee no cutoff */}
+              <div className="flex flex-wrap justify-center gap-1 sm:gap-1.5 max-w-[280px] xs:max-w-[320px] sm:max-w-sm mx-auto">
+                {alphabet.map((letter) => (
                   <button
-                    onClick={() => handleLetterClick("")}
-                    className="col-span-2 xs:col-span-1 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm h-7 xs:h-8 sm:h-9 px-1.5 xs:px-2 min-w-[30px]"
+                    key={letter}
+                    onClick={() => handleLetterClick(letter)}
+                    className="w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm flex-shrink-0"
                   >
-                    All
+                    {letter}
                   </button>
-                </div>
+                ))}
+                <button
+                  onClick={() => handleLetterClick("")}
+                  className="px-2 xs:px-3 h-7 xs:h-8 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm flex-shrink-0"
+                >
+                  All
+                </button>
               </div>
             </div>
           </div>
