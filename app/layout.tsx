@@ -4,6 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -96,6 +97,8 @@ export default function RootLayout({
           </p>
         </footer>
       </body>
+      {/* 👇 ADD GOOGLE ANALYTICS HERE - RIGHT BEFORE CLOSING </html> */}
+      <GoogleAnalytics gaId="G-730JR4XRVP"/>
     </html>
   );
 }
