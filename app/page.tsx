@@ -107,6 +107,14 @@ export default function HomePage() {
 
   if (!mounted) return null;
 
+  // Split alphabet into rows for guaranteed fit
+  const alphabetRows = [
+    ["A", "B", "C", "D", "E", "F", "G"],
+    ["H", "I", "J", "K", "L", "M", "N"],
+    ["O", "P", "Q", "R", "S", "T", "U"],
+    ["V", "W", "X", "Y", "Z", "All"],
+  ];
+
   return (
     <div className="bg-[#faf7f2] text-gray-800">
       {/* Hero Section */}
@@ -148,30 +156,29 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - SIMPLIFIED FLEXBOX - NO CUTOFF */}
+          {/* Alphabet - HARDCODED ROWS FOR GUARANTEED FIT */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
               
-              {/* Simple flex container with max-width that fits all screens */}
-              <div className="flex flex-wrap justify-center gap-1.5 max-w-[300px] mx-auto">
-                {alphabet.map((letter) => (
-                  <button
-                    key={letter}
-                    onClick={() => handleLetterClick(letter)}
-                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-sm flex-shrink-0"
-                  >
-                    {letter}
-                  </button>
+              <div className="flex flex-col items-center gap-1.5">
+                {alphabetRows.map((row, rowIndex) => (
+                  <div key={rowIndex} className="flex justify-center gap-1.5">
+                    {row.map((letter) => (
+                      <button
+                        key={letter}
+                        onClick={() => handleLetterClick(letter === "All" ? "" : letter)}
+                        className={`w-8 h-8 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-sm ${
+                          letter === "All" ? "px-3 w-auto" : ""
+                        }`}
+                      >
+                        {letter}
+                      </button>
+                    ))}
+                  </div>
                 ))}
-                <button
-                  onClick={() => handleLetterClick("")}
-                  className="px-3 h-8 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 flex items-center justify-center text-sm flex-shrink-0"
-                >
-                  All
-                </button>
               </div>
             </div>
           </div>
