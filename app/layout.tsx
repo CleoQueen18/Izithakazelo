@@ -1,6 +1,5 @@
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import { useState } from "react";
@@ -27,12 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[#faf7f2] text-gray-800">
-        {/* NAV - Removed sticky */}
-        <header className="border-b border-amber-100 bg-white/90 backdrop-blur-md">
-          <nav className="max-w-6xl mx-auto px-4 py-3">
-            
-            {/* Top row */}
-            <div className="flex items-center justify-between">
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-amber-100">
+          <nav className="relative max-w-6xl mx-auto px-4">
+            {/* Navbar row */}
+            <div className="flex items-center justify-between h-16">
               <Link
                 href="/"
                 className="text-xl font-bold text-gray-900 hover:text-amber-700 transition"
@@ -40,63 +37,62 @@ export default function RootLayout({
                 Izithakazelo
               </Link>
 
-              {/* Hamburger button (mobile only) */}
               <button
-                className="md:hidden text-2xl"
+                className="md:hidden text-3xl text-gray-800"
                 onClick={() => setOpen(!open)}
                 aria-label="Toggle menu"
               >
                 {open ? "✕" : "☰"}
               </button>
-            </div>
 
-            {/* Desktop nav */}
-            <div className="hidden md:flex justify-center gap-4 mt-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-xs transition ${
-                    pathname === link.href
-                      ? "text-amber-700 font-semibold"
-                      : "text-gray-600 hover:text-amber-700"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile dropdown */}
-            {open && (
-              <div className="md:hidden mt-3 flex flex-col gap-3 border-t border-amber-100 pt-3">
+              {/* Desktop links */}
+              <div className="hidden md:flex items-center gap-6">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={`text-sm py-1 ${
+                    className={`text-sm transition ${
                       pathname === link.href
                         ? "text-amber-700 font-semibold"
-                        : "text-gray-600"
+                        : "text-gray-600 hover:text-amber-700"
                     }`}
                   >
                     {link.label}
                   </Link>
                 ))}
               </div>
+            </div>
+
+            {/* Mobile dropdown */}
+            {open && (
+              <div className="absolute top-full left-0 w-full bg-white border-t border-amber-100 shadow-lg md:hidden">
+                <div className="flex flex-col p-4">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={`py-3 text-sm border-b border-gray-100 last:border-b-0 ${
+                        pathname === link.href
+                          ? "text-amber-700 font-semibold"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             )}
           </nav>
         </header>
 
-        {/* PAGE CONTENT */}
-         <main className="min-h-screen">
-          {children}
-        </main>
-        {/* FOOTER */}
+        <main className="min-h-screen">{children}</main>
+
         <footer className="mt-12 border-t border-amber-100 bg-white py-6 text-center text-xs text-gray-500">
           <p>
-            © {new Date().getFullYear()} Izithakazelo — Preserving African Heritage
+            © {new Date().getFullYear()} Izithakazelo — Preserving African
+            Heritage
           </p>
         </footer>
       </body>
