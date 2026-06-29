@@ -107,7 +107,7 @@ export default function HomePage() {
 
   if (!mounted) return null;
 
-  // Split alphabet into rows of 5 for guaranteed fit on any phone
+  // Split alphabet into rows of 5
   const alphabetRows = [
     ["A", "B", "C", "D", "E"],
     ["F", "G", "H", "I", "J"],
@@ -158,22 +158,22 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - 5 PER ROW - SMALL & COMPACT */}
+          {/* Alphabet - 5 PER ROW - BIGGER BUTTONS */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
               
-              <div className="flex flex-col items-center gap-1">
+              <div className="flex flex-col items-center gap-1.5 sm:gap-2">
                 {alphabetRows.map((row, rowIndex) => (
-                  <div key={rowIndex} className="flex justify-center gap-1">
+                  <div key={rowIndex} className="flex justify-center gap-1.5 sm:gap-2">
                     {row.map((letter) => (
                       <button
                         key={letter}
                         onClick={() => handleLetterClick(letter === "All" ? "" : letter)}
-                        className={`w-6 h-6 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[10px] ${
-                          letter === "All" ? "px-1.5 w-auto text-[9px]" : ""
+                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-xs sm:text-sm ${
+                          letter === "All" ? "px-2 sm:px-3 w-auto" : ""
                         }`}
                       >
                         {letter}
