@@ -157,7 +157,7 @@ function ClansContent() {
       style={{ backgroundImage: `url('${BACKGROUND_IMAGE}')` }}
     >
       <div className="min-h-screen bg-[#2b1d14]/90">
-        <div className="max-w-6xl mx-auto px-6 py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
           <div className="mb-6">
             <button
               onClick={() => router.back()}
@@ -226,33 +226,35 @@ function ClansContent() {
             </div>
           </div>
 
-          {/* Alphabet - Fixed for mobile */}
-          <div className="bg-[#2b1d14]/70 backdrop-blur-sm rounded-xl border border-amber-800/30 p-3 mb-4">
-            <p className="text-amber-300/60 text-[10px] uppercase tracking-wider mb-2 text-center">
+          {/* Alphabet - UPDATED TO MATCH HOMEPAGE STYLE */}
+          <div className="bg-[#2b1d14]/70 backdrop-blur-sm rounded-xl border border-amber-800/30 p-3 sm:p-4 mb-4 overflow-hidden">
+            <p className="text-amber-300/60 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
               Filter by Surname Letter
             </p>
-            <div className="flex flex-wrap justify-center gap-1 max-w-sm mx-auto">
-              {alphabet.map((letter) => (
-                <button
-                  key={letter}
-                  onClick={() => setSelectedLetter(selectedLetter === letter ? "" : letter)}
-                  className={`w-7 h-7 rounded-full text-xs font-medium transition-all ${
-                    selectedLetter === letter
-                      ? "bg-amber-600 text-white"
-                      : "bg-white/20 text-white hover:bg-white/30"
-                  }`}
-                >
-                  {letter}
-                </button>
-              ))}
-              {selectedLetter && (
-                <button
-                  onClick={clearLetterFilter}
-                  className="px-2 h-7 rounded-full bg-white/20 text-white text-xs hover:bg-white/30 ml-1"
-                >
-                  Clear
-                </button>
-              )}
+            <div className="w-full overflow-hidden px-0.5 sm:px-1">
+              <div className="grid grid-cols-7 xs:grid-cols-8 sm:grid-cols-9 md:grid-cols-10 gap-1 sm:gap-1.5 max-w-full mx-auto">
+                {alphabet.map((letter) => (
+                  <button
+                    key={letter}
+                    onClick={() => setSelectedLetter(selectedLetter === letter ? "" : letter)}
+                    className={`aspect-square w-full min-w-[28px] rounded-full text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center h-8 xs:h-9 sm:h-10 ${
+                      selectedLetter === letter
+                        ? "bg-amber-600 text-white hover:bg-amber-700"
+                        : "bg-white/20 text-white hover:bg-white/30"
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                ))}
+                {selectedLetter && (
+                  <button
+                    onClick={clearLetterFilter}
+                    className="col-span-2 xs:col-span-1 rounded-full bg-white/20 hover:bg-white/30 text-white text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center h-8 xs:h-9 sm:h-10 px-2 xs:px-3 min-w-[36px]"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
