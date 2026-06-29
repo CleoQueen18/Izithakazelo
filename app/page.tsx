@@ -109,8 +109,8 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#faf7f2] text-gray-800">
-      {/* Hero Section - Fixed for mobile */}
-      <section className="relative min-h-[500px] sm:min-h-[75vh] overflow-hidden">
+      {/* Hero Section - Full height for mobile */}
+      <section className="relative min-h-[600px] sm:min-h-[75vh] overflow-hidden">
         <Image
           src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png"
           alt="Izithakazelo heritage background"
