@@ -107,16 +107,6 @@ export default function HomePage() {
 
   if (!mounted) return null;
 
-  // Split alphabet into rows of 5
-  const alphabetRows = [
-    ["A", "B", "C", "D", "E"],
-    ["F", "G", "H", "I", "J"],
-    ["K", "L", "M", "N", "O"],
-    ["P", "Q", "R", "S", "T"],
-    ["U", "V", "W", "X", "Y"],
-    ["Z", "All"],
-  ];
-
   return (
     <div className="bg-[#faf7f2] text-gray-800">
       {/* Hero Section */}
@@ -158,29 +148,32 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - 5 PER ROW - BIGGER BUTTONS */}
+          {/* Alphabet - FIXED CUTOFF ISSUE */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20 overflow-hidden">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
               
-              <div className="flex flex-col items-center gap-1.5 sm:gap-2">
-                {alphabetRows.map((row, rowIndex) => (
-                  <div key={rowIndex} className="flex justify-center gap-1.5 sm:gap-2">
-                    {row.map((letter) => (
-                      <button
-                        key={letter}
-                        onClick={() => handleLetterClick(letter === "All" ? "" : letter)}
-                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-xs sm:text-sm ${
-                          letter === "All" ? "px-2 sm:px-3 w-auto" : ""
-                        }`}
-                      >
-                        {letter}
-                      </button>
-                    ))}
-                  </div>
-                ))}
+              {/* Added overflow-hidden and proper padding to prevent cutoff */}
+              <div className="w-full overflow-hidden px-0.5 sm:px-1">
+                <div className="grid grid-cols-7 xs:grid-cols-8 sm:grid-cols-9 md:grid-cols-10 gap-1 sm:gap-1.5 max-w-full mx-auto">
+                  {alphabet.map((letter) => (
+                    <button
+                      key={letter}
+                      onClick={() => handleLetterClick(letter)}
+                      className="aspect-square w-full min-w-[24px] rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm h-7 xs:h-8 sm:h-9"
+                    >
+                      {letter}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => handleLetterClick("")}
+                    className="col-span-2 xs:col-span-1 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 flex items-center justify-center text-[10px] xs:text-xs sm:text-sm h-7 xs:h-8 sm:h-9 px-1.5 xs:px-2 min-w-[30px]"
+                  >
+                    All
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -345,4 +338,4 @@ export default function HomePage() {
       </div>
     </div>
   );
-}
+} 
