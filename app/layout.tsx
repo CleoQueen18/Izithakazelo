@@ -27,8 +27,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[#faf7f2] text-gray-800">
-        {/* NAV */}
-        <header className="sticky top-0 z-50 border-b border-amber-100 bg-white/90 backdrop-blur-md">
+        {/* NAV - Removed sticky */}
+        <header className="border-b border-amber-100 bg-white/90 backdrop-blur-md">
           <nav className="max-w-6xl mx-auto px-4 py-3">
             
             {/* Top row */}
