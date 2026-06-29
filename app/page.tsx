@@ -107,12 +107,14 @@ export default function HomePage() {
 
   if (!mounted) return null;
 
-  // Split alphabet into rows for guaranteed fit
+  // Split alphabet into rows of 5 for guaranteed fit on any phone
   const alphabetRows = [
-    ["A", "B", "C", "D", "E", "F", "G"],
-    ["H", "I", "J", "K", "L", "M", "N"],
-    ["O", "P", "Q", "R", "S", "T", "U"],
-    ["V", "W", "X", "Y", "Z", "All"],
+    ["A", "B", "C", "D", "E"],
+    ["F", "G", "H", "I", "J"],
+    ["K", "L", "M", "N", "O"],
+    ["P", "Q", "R", "S", "T"],
+    ["U", "V", "W", "X", "Y"],
+    ["Z", "All"],
   ];
 
   return (
@@ -156,22 +158,22 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - HARDCODED ROWS FOR GUARANTEED FIT */}
+          {/* Alphabet - 5 PER ROW - SMALL & COMPACT */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
               
-              <div className="flex flex-col items-center gap-1.5">
+              <div className="flex flex-col items-center gap-1">
                 {alphabetRows.map((row, rowIndex) => (
-                  <div key={rowIndex} className="flex justify-center gap-1.5">
+                  <div key={rowIndex} className="flex justify-center gap-1">
                     {row.map((letter) => (
                       <button
                         key={letter}
                         onClick={() => handleLetterClick(letter === "All" ? "" : letter)}
-                        className={`w-8 h-8 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-sm ${
-                          letter === "All" ? "px-3 w-auto" : ""
+                        className={`w-6 h-6 rounded-full bg-white/20 hover:bg-amber-600 text-white font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center text-[10px] ${
+                          letter === "All" ? "px-1.5 w-auto text-[9px]" : ""
                         }`}
                       >
                         {letter}
