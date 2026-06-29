@@ -109,7 +109,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-[#faf7f2] text-gray-800">
-      {/* Hero Section - Fixed for mobile */}
+      {/* Hero Section */}
       <section className="relative h-[60vh] sm:h-[85vh] min-h-[400px] overflow-hidden">
         <Image
           src="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png"
@@ -148,25 +148,26 @@ export default function HomePage() {
             </div>
           </form>
 
-          {/* Alphabet - COMPLETELY FIXED FOR MOBILE */}
+          {/* Alphabet - COMPLETELY REDESIGNED TO PREVENT CUTOFF */}
           <div className="mt-6 sm:mt-8 w-full max-w-2xl px-2 sm:px-0">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 sm:p-4 border border-white/20">
               <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3 text-center">
                 Browse by Surname Letter
               </p>
-              <div className="flex flex-wrap justify-center gap-1 sm:gap-1.5 max-w-[290px] sm:max-w-sm mx-auto">
+              {/* Using a more flexible grid approach */}
+              <div className="grid grid-cols-7 sm:grid-cols-9 gap-1 sm:gap-1.5 max-w-full mx-auto">
                 {alphabet.map((letter) => (
                   <button
                     key={letter}
                     onClick={() => handleLetterClick(letter)}
-                    className="w-7 h-7 sm:w-9 sm:h-9 min-w-[28px] sm:min-w-[36px] rounded-full bg-white/20 hover:bg-amber-600 text-white text-[11px] sm:text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center"
+                    className="aspect-square w-full rounded-full bg-white/20 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center justify-center min-h-[32px] sm:min-h-[36px]"
                   >
                     {letter}
                   </button>
                 ))}
                 <button
                   onClick={() => handleLetterClick("")}
-                  className="px-3 sm:px-4 h-7 sm:h-9 rounded-full bg-white/20 hover:bg-amber-600 text-white text-[11px] sm:text-sm font-medium transition-all duration-200 flex items-center justify-center"
+                  className="col-span-2 sm:col-span-1 rounded-full bg-white/20 hover:bg-amber-600 text-white text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center min-h-[32px] sm:min-h-[36px] px-2"
                 >
                   All
                 </button>
@@ -176,7 +177,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section - Fixed for mobile */}
+      {/* Features Section */}
       <div className="relative w-full bg-cover bg-center" style={{ backgroundImage: `url('${FEATURES_BG}')` }}>
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
@@ -209,7 +210,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Featured Stories - Fixed for mobile */}
+      {/* Featured Stories */}
       {!loading && displayStories.map((story) => (
         <div key={story.id} className="relative w-full overflow-hidden shadow-lg">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${story.imageUrl || DEFAULT_STORY_BG}')` }} />
@@ -236,7 +237,7 @@ export default function HomePage() {
         </div>
       ))}
 
-      {/* Browse by Tribe - Fixed for mobile */}
+      {/* Browse by Tribe */}
       <div className="relative w-full bg-cover bg-center" style={{ backgroundImage: `url('${FEATURES_BG}')` }}>
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center">
@@ -257,7 +258,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Preserving Our Heritage - Fixed for mobile */}
+      {/* Preserving Our Heritage */}
       <div className="relative w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image 
@@ -283,7 +284,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Footer - COMPLETELY FIXED FOR MOBILE */}
+      {/* Footer */}
       <div className="border-t border-amber-100 py-12 sm:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-12 mb-6 sm:mb-8">
