@@ -100,4 +100,4 @@ export default function SocialShare({ title, text, url, clanId, clanName }: Soci
       )}
     </div>
   );
-}
+} 
