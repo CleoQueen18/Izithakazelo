@@ -70,7 +70,6 @@ export default function StoryDetailPage() {
     async function fetchStory() {
       try {
         setLoading(true);
-        // FIXED: Correct API endpoint path
         const res = await fetch(`/api/featured-stories/${params.id}`);
         
         if (!res.ok) {
@@ -85,13 +84,11 @@ export default function StoryDetailPage() {
         const data = await res.json();
         setStory(data);
         
-        // Extract headings for table of contents
         if (data.content) {
           const extractedHeadings = extractHeadings(data.content);
           setHeadings(extractedHeadings);
         }
         
-        // Fetch related stories (same tribe)
         if (data.clan?.tribe) {
           const storiesRes = await fetch("/api/stories");
           const allStories = await storiesRes.json();
@@ -114,7 +111,6 @@ export default function StoryDetailPage() {
     }
   }, [params.id]);
 
-  // Print function
   const handlePrint = () => {
     const printContent = contentRef.current?.innerHTML;
     const originalTitle = document.title;
@@ -150,7 +146,6 @@ export default function StoryDetailPage() {
     document.title = originalTitle;
   };
 
-  // Scroll to section
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -222,12 +217,9 @@ export default function StoryDetailPage() {
         />
       </div>
 
-      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
 
-      {/* Content */}
       <div className="relative z-10">
-        {/* Decorative top bar */}
         <div className="w-full h-1 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500" />
 
         <div className="max-w-6xl mx-auto px-6 py-8">
@@ -315,7 +307,6 @@ export default function StoryDetailPage() {
 
           {/* Two Column Layout: Table of Contents + Content */}
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Table of Contents - Desktop Sidebar */}
             {headings.length > 0 && (
               <div className="lg:w-64 flex-shrink-0 no-print">
                 <div className="sticky top-24 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
@@ -338,7 +329,6 @@ export default function StoryDetailPage() {
 
             {/* Main Content */}
             <div className="flex-1">
-              {/* Featured Image (if available) */}
               {story.imageUrl && (
                 <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
                   <div className="relative h-64 md:h-96 w-full">
@@ -353,7 +343,6 @@ export default function StoryDetailPage() {
                 </div>
               )}
 
-              {/* Story Content Card */}
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
                 <div className="w-full h-1.5 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500" />
                 
@@ -365,29 +354,11 @@ export default function StoryDetailPage() {
                 </div>
               </div>
 
-              {/* Share Buttons at Bottom */}
+              {/* Share Buttons at Bottom - ONLY COPY LINK */}
               <div className="mt-8 flex justify-center gap-3 no-print">
                 <button
-                  onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
-                  className="bg-[#1877F2] hover:bg-[#166fe5] text-white px-4 py-2 rounded-lg text-sm transition flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                  </svg>
-                  Share
-                </button>
-                <button
-                  onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(story.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                  className="bg-[#1DA1F2] hover:bg-[#1a8cd8] text-white px-4 py-2 rounded-lg text-sm transition flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
-                  </svg>
-                  Tweet
-                </button>
-                <button
                   onClick={() => navigator.clipboard.writeText(window.location.href)}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition flex items-center gap-2"
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-sm transition flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -474,7 +445,6 @@ export default function StoryDetailPage() {
         </div>
       </div>
 
-      {/* Scroll to Top Button */}
       <ScrollToTop />
     </div>
   );
