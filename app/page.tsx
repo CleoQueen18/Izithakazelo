@@ -330,9 +330,7 @@ export default function HomePage() {
             </Link>
           </div>
           
-          <div className="text-center text-[10px] sm:text-xs text-gray-400 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-amber-50">
-            <p>© 2026 Izithakazelo — Preserving African Heritage</p>
-          </div>
+          
         </div>
       </div>
     </div>

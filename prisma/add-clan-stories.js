@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function addClanStories() {
-  console.log('📜 Adding origin stories and history to clans...\n');
+  console.log('Adding origin stories and history to clans...\n');
 
   const clanData = [
     {
