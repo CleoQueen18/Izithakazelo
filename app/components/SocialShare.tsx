@@ -20,8 +20,6 @@ export default function SocialShare({ title, text, url, clanId, clanName }: Soci
 
   const shareLinks = {
     whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`,
-    twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
     email: `mailto:?subject=${encodedTitle}&body=${encodedText}%0A%0A${encodedUrl}`,
   };
 
@@ -82,31 +80,13 @@ export default function SocialShare({ title, text, url, clanId, clanName }: Soci
               onClick={() => handleShare("whatsapp", shareLinks.whatsapp)}
               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-green-50 rounded-lg"
             >
-              <span className="text-lg"></span> WhatsApp
-            </button>
-            <button
-              onClick={() => handleShare("facebook", shareLinks.facebook)}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-lg"
-            >
-              <span className="text-lg"></span> Facebook
-            </button>
-            <button
-              onClick={() => handleShare("twitter", shareLinks.twitter)}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-sky-50 rounded-lg"
-            >
-              <span className="text-lg"></span> Twitter
-            </button>
-            <button
-              onClick={() => handleShare("pinterest", shareLinks.twitter)} // Update Pinterest link later
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-red-50 rounded-lg"
-            >
-              <span className="text-lg"></span> Pinterest
+              <span className="text-lg">📱</span> WhatsApp
             </button>
             <button
               onClick={() => handleShare("email", shareLinks.email)}
               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
             >
-              <span className="text-lg"></span> Email
+              <span className="text-lg">✉️</span> Email
             </button>
             <div className="border-t border-[#D4A017] my-1" />
             <button
