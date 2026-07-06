@@ -1,103 +1,115 @@
 "use client";
 
+import Link from "next/link";
+import "./globals.css";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
-type SocialShareProps = {
-  title: string;
-  text: string;
-  url: string;
-  clanId?: number;
-  clanName?: string;
-};
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/stories", label: "Stories" },
+  { href: "/tribes", label: "Tribes" },
+  { href: "/clans", label: "Clans" },
+  { href: "/contribute", label: "Contribute" },
+  { href: "/contact", label: "Contact" },
+  { href: "/about", label: "About" },
+];
 
-export default function SocialShare({ title, text, url, clanId, clanName }: SocialShareProps) {
-  const [showPopup, setShowPopup] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const encodedText = encodeURIComponent(text);
-  const encodedUrl = encodeURIComponent(url);
-  const encodedTitle = encodeURIComponent(title);
-
-  const shareLinks = {
-    whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
-    email: `mailto:?subject=${encodedTitle}&body=${encodedText}%0A%0A${encodedUrl}`,
-  };
-
-  const trackShare = async (platform: string) => {
-    if (clanId && clanName) {
-      try {
-        await fetch("/api/analytics/share", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            clanId,
-            clanName,
-            platform,
-            userAgent: navigator.userAgent,
-            referrer: document.referrer,
-          }),
-        });
-      } catch (error) {
-        console.error("Failed to track share:", error);
-      }
-    }
-  };
-
-  const handleShare = (platform: string, link: string) => {
-    trackShare(platform);
-    window.open(link, "_blank");
-    setShowPopup(false);
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(`${text}\n\n${url}`);
-      setCopied(true);
-      trackShare("copy");
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setShowPopup(!showPopup)}
-        className="flex items-center gap-1 text-gray-400 hover:text-[#D4A017] transition text-sm"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-        </svg>
-        Share
-      </button>
+    <html lang="en">
+      <head>
+        {/* Google Analytics - Manual Script */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-730JR4XRVP"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-730JR4XRVP');
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-[#faf7f2] text-gray-800">
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-amber-100">
+          <nav className="relative max-w-6xl mx-auto px-4">
+            <div className="flex items-center justify-between h-16">
+              <Link
+                href="/"
+                className="text-xl font-bold text-gray-900 hover:text-amber-700 transition"
+              >
+                Izithakazelo
+              </Link>
 
-      {showPopup && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setShowPopup(false)} />
-          <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-xl shadow-lg border border-[#D4A017] p-2 min-w-[160px]">
-            <button
-              onClick={() => handleShare("whatsapp", shareLinks.whatsapp)}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-green-50 rounded-lg"
-            >
-              <span className="text-lg">📱</span> WhatsApp
-            </button>
-            <button
-              onClick={() => handleShare("email", shareLinks.email)}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
-            >
-              <span className="text-lg">✉️</span> Email
-            </button>
-            <div className="border-t border-[#D4A017] my-1" />
-            <button
-              onClick={copyToClipboard}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
-            >
-              <span className="text-lg">🔗</span> {copied ? "Copied!" : "Copy Link"}
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+              <button
+                className="md:hidden text-3xl text-gray-800"
+                onClick={() => setOpen(!open)}
+                aria-label="Toggle menu"
+              >
+                {open ? "✕" : "☰"}
+              </button>
+
+              <div className="hidden md:flex items-center gap-6">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-sm transition ${
+                      pathname === link.href
+                        ? "text-amber-700 font-semibold"
+                        : "text-gray-600 hover:text-amber-700"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {open && (
+              <div className="absolute top-full left-0 w-full bg-white border-t border-amber-100 shadow-lg md:hidden">
+                <div className="flex flex-col p-4">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={`py-3 text-sm border-b border-gray-100 last:border-b-0 ${
+                        pathname === link.href
+                          ? "text-amber-700 font-semibold"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </nav>
+        </header>
+
+        <main className="min-h-screen">{children}</main>
+
+        <footer className="mt-12 border-t border-amber-100 bg-white py-6 text-center text-xs text-gray-500">
+          <p>
+            © {new Date().getFullYear()} Izithakazelo — Preserving African
+            Heritage
+          </p>
+        </footer>
+      </body>
+    </html>
   );
 }
