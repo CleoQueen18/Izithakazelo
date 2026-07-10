@@ -147,7 +147,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-xs text-white/60">Email</p>
-                    <p className="text-sm">cleo.izithakazelo@outlook.com</p>
+                    <p className="text-sm">info.izithakazelo.co.za</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
