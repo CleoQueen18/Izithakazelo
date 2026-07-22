@@ -65,6 +65,7 @@ export default function AdminPage() {
 
   async function updateStatus(id: number, status: string) {
     try {
+      // 1. Update the contribution status
       const res = await fetch("/api/admin/contributions", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -72,6 +73,41 @@ export default function AdminPage() {
       });
       
       if (!res.ok) throw new Error("Failed to update");
+
+      // 2. If approved, add to clanSurname
+      if (status === "APPROVED") {
+        const contribution = contributions.find(c => c.id === id);
+        if (contribution) {
+          const data = JSON.parse(contribution.data);
+          
+          // Call the clans API to create the relationship
+          const createRes = await fetch("/api/clans", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              surname: data.surname || data.name,
+              clanName: data.clanName,
+              clan_praise: data.clan_praise || "",
+              origin: data.origin || "",
+              language: data.language || "",
+            }),
+          });
+          
+          if (!createRes.ok) {
+            const errorData = await createRes.json();
+            console.error("Create clan error:", errorData);
+            setNotification({ 
+              type: "error", 
+              message: `Contribution approved but failed to add to website: ${errorData.error || "Unknown error"}` 
+            });
+            setSelectedContribution(null);
+            setAdminNotes("");
+            fetchContributions();
+            setTimeout(() => setNotification(null), 5000);
+            return;
+          }
+        }
+      }
       
       setNotification({ type: "success", message: `Contribution ${status.toLowerCase()} successfully!` });
       setSelectedContribution(null);
@@ -79,6 +115,7 @@ export default function AdminPage() {
       fetchContributions();
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
+      console.error("Update error:", error);
       setNotification({ type: "error", message: "Failed to update contribution." });
     }
   }
