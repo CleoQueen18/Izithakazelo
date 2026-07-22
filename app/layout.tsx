@@ -4,7 +4,6 @@ import Link from "next/link";
 import "./globals.css";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { GoogleAnalytics } from "@next/third-parties/google"
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -26,6 +25,23 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-730JR4XRVP"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-730JR4XRVP');
+            `,
+          }}
+        />
+      </head>
       <body className="bg-[#faf7f2] text-gray-800">
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-amber-100">
           <nav className="relative max-w-6xl mx-auto px-4">
@@ -97,8 +113,6 @@ export default function RootLayout({
           </p>
         </footer>
       </body>
-      {/* 👇 ADD GOOGLE ANALYTICS HERE - RIGHT BEFORE CLOSING </html> */}
-      <GoogleAnalytics gaId="G-730JR4XRVP"/>
     </html>
   );
 }
