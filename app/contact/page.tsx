@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Mail,
   MapPin,
@@ -185,17 +186,18 @@ export default function ContactPage() {
         ========================= */}
 
         <section className="relative min-h-[280px] sm:min-h-[390px] flex items-center justify-center overflow-hidden">
-          {/* Hero Image */}
-          <div
-            className="absolute inset-0 bg-cover bg-center scale-105"
-            style={{
-              backgroundImage: `url("${HERO_IMAGE}")`,
-            }}
+          {/* Hero Image using Next.js Image */}
+          <Image
+            src={HERO_IMAGE}
+            alt="Izithakazelo heritage background"
+            fill
+            priority
+            className="object-cover object-[center_30%]"
+            sizes="100vw"
           />
 
           {/* Hero overlays */}
           <div className="absolute inset-0 bg-black/50" />
-
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-[#1b1009]/80" />
 
           {/* Back button */}
