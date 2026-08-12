@@ -424,7 +424,7 @@ export default function TribeDetailPage() {
   return (
     <main className="min-h-screen bg-[#faf7f2] text-gray-800">
       {/* ========================================================
-          HERO
+          HERO - FIXED LAYOUT
       ======================================================== */}
 
       <section className="relative overflow-hidden bg-[#211b16]">
@@ -440,7 +440,6 @@ export default function TribeDetailPage() {
         </div>
 
         <div className="absolute inset-0 bg-black/60" />
-
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/60 to-[#211b16]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 pb-12 pt-8 sm:px-6 sm:pb-18 sm:pt-10">
@@ -454,9 +453,10 @@ export default function TribeDetailPage() {
             Back
           </button>
 
-          <div className="grid items-center gap-6 md:grid-cols-[auto_1fr_auto]">
-            {/* Tribe Icon - FIXED */}
-            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-2.5 shadow-2xl backdrop-blur-md sm:h-24 sm:w-24 md:h-28 md:w-28">
+          {/* Hero Content - Flex layout prevents stretching */}
+          <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:gap-6 sm:text-left">
+            {/* Tribe Icon - FIXED with flex-shrink-0 */}
+            <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-2.5 shadow-2xl backdrop-blur-md sm:h-24 sm:w-24 md:h-28 md:w-28">
               <Image
                 src={tribeIcon}
                 alt={`${displayTribeName} tribe`}
@@ -468,16 +468,16 @@ export default function TribeDetailPage() {
             </div>
 
             {/* Hero Content */}
-            <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
+            <div className="flex-1">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 sm:mb-3">
                 Cultural Heritage
               </p>
 
-              <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
                 {displayTribeName}
               </h1>
 
-              <p className="mt-3 text-lg text-white/65">
+              <p className="mt-1 text-base text-white/65 sm:mt-3 sm:text-lg">
                 {clans.length}{" "}
                 {clans.length === 1 ? "clan" : "clans"} ·{" "}
                 {totalSurnames}{" "}
@@ -486,12 +486,12 @@ export default function TribeDetailPage() {
                   : "surnames"}
               </p>
 
-              <div className="mt-5 h-px w-16 bg-amber-500" />
+              <div className="mx-auto mt-3 h-px w-12 bg-amber-500 sm:mx-0 sm:mt-5 sm:w-16" />
             </div>
 
-            {/* Share */}
-            <div className="w-fit">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-md">
+            {/* Share - flex-shrink-0 prevents stretching */}
+            <div className="flex-shrink-0">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur-md sm:p-3">
                 <SocialShare
                   title={`${displayTribeName} Tribe - Izithakazelo`}
                   text={`Explore the clans, surnames and heritage of the ${displayTribeName} tribe.`}
