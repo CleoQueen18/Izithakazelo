@@ -4,7 +4,6 @@ import Link from "next/link";
 import "./globals.css";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import Head from "next/head";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -60,7 +59,7 @@ export default function RootLayout({
         />
         <meta 
           property="og:image" 
-          content="https://izithakazelo.co.za/og-image.jpg" 
+          content="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png" 
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -79,7 +78,7 @@ export default function RootLayout({
         />
         <meta 
           name="twitter:image" 
-          content="https://izithakazelo.co.za/og-image.jpg" 
+          content="https://res.cloudinary.com/dwxp1yq4b/image/upload/v1779383915/izithakazelo.png" 
         />
         <meta name="twitter:site" content="@Izithakazelo" />
 
