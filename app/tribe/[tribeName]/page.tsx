@@ -450,22 +450,20 @@ export default function TribeDetailPage() {
             onClick={() => router.back()}
             className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70 backdrop-blur-sm transition hover:border-amber-400/30 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-amber-400"
           >
-            <ArrowLeft
-              className="h-4 w-4"
-              aria-hidden="true"
-            />
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
           </button>
 
-          <div className="grid items-center gap-8 md:grid-cols-[auto_1fr_auto]">
-            {/* Tribe Icon */}
-            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-3 shadow-2xl backdrop-blur-md sm:h-28 sm:w-28">
+          <div className="grid items-center gap-6 md:grid-cols-[auto_1fr_auto]">
+            {/* Tribe Icon - FIXED */}
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-2.5 shadow-2xl backdrop-blur-md sm:h-24 sm:w-24 md:h-28 md:w-28">
               <Image
                 src={tribeIcon}
                 alt={`${displayTribeName} tribe`}
-                width={96}
-                height={96}
+                width={80}
+                height={80}
                 className="h-full w-full object-contain"
+                sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, 112px"
               />
             </div>
 
