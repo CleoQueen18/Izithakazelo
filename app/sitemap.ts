@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { PrismaClient } from "@prisma/client";
 
+export const dynamic = "force-dynamic";
+
 const prisma = new PrismaClient();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -17,31 +19,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
   ];
 
-  // Dynamic clan pages
-  const clans = await prisma.clan.findMany({
-    select: { name: true },
-  });
+  // Try dynamic pages, fall back to static if database fails
+  let clanPages: MetadataRoute.Sitemap = [];
+  let surnamePages: MetadataRoute.Sitemap = [];
+  let storyPages: MetadataRoute.Sitemap = [];
 
-  const clanPages: MetadataRoute.Sitemap = clans.map((clan) => ({
-    url: `${baseUrl}/clans/${clan.name.toLowerCase()}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
+  try {
+    const clans = await prisma.clan.findMany({
+      select: { name: true },
+    });
 
-  // Dynamic surname pages
-  const surnames = await prisma.surname.findMany({
-    select: { name: true },
-  });
+    clanPages = clans.map((clan) => ({
+      url: `${baseUrl}/clans/${clan.name.toLowerCase()}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
 
-  const surnamePages: MetadataRoute.Sitemap = surnames.map((surname) => ({
-    url: `${baseUrl}/surname/${encodeURIComponent(surname.name)}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
+    const surnames = await prisma.surname.findMany({
+      select: { name: true },
+    });
 
-  // Dynamic tribe pages
+    surnamePages = surnames.map((surname) => ({
+      url: `${baseUrl}/surname/${encodeURIComponent(surname.name)}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+
+    const stories = await prisma.featuredStory.findMany({
+      select: { id: true },
+    });
+
+    storyPages = stories.map((story) => ({
+      url: `${baseUrl}/stories/${story.id}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+  } catch (error) {
+    console.error("Sitemap: database unavailable, using static pages only", error);
+  }
+
+  // Dynamic tribe pages (no database needed)
   const tribes = ["Zulu", "Xhosa", "Swati", "Ndebele", "Sotho", "Tswana", "Venda", "Tsonga", "Pedi"];
 
   const tribePages: MetadataRoute.Sitemap = tribes.map((tribe) => ({
@@ -49,18 +69,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: 0.7,
-  }));
-
-  // Dynamic story pages
-  const stories = await prisma.story.findMany({
-    select: { id: true },
-  });
-
-  const storyPages: MetadataRoute.Sitemap = stories.map((story) => ({
-    url: `${baseUrl}/stories/${story.id}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.6,
   }));
 
   return [
