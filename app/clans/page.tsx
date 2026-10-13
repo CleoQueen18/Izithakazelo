@@ -17,6 +17,7 @@ import {
 
 import SocialShare from "@/app/components/SocialShare";
 import ClanImageGallery from "@/app/components/ClanImageGallery";
+import { trackClanSearch } from "@/app/lib/analytics";
 
 type Surname = {
   id: number;
@@ -146,6 +147,20 @@ function ClansContent() {
       setLoading(false);
     }
   }
+
+  // ============================================================
+  // SEARCH HANDLER WITH TRACKING
+  // ============================================================
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+
+    // Only track when user has typed at least 2 characters
+    // Debounced by nature — fires on each keystroke after 2 chars
+    if (value.length >= 2) {
+      trackClanSearch(value);
+    }
+  };
 
   // ============================================================
   // CONTRIBUTION FORM
@@ -333,10 +348,6 @@ function ClansContent() {
     0
   );
 
-  const tribeCount = new Set(
-    clans.map((clan) => clan.tribe)
-  ).size;
-
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.origin
@@ -446,7 +457,7 @@ function ClansContent() {
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md sm:p-5">
               <span className="text-lg font-serif text-amber-400">
-                “”
+                ""
               </span>
 
               <p className="mt-2 text-2xl font-semibold text-white">
@@ -515,7 +526,7 @@ function ClansContent() {
             <input
               type="search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search clan names, surnames or praises..."
               className="min-h-[50px] w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/10"
             />

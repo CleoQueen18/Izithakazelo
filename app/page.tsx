@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { trackClanSearch } from "@/app/lib/analytics";
 
 const tribes = [
   "Zulu",
@@ -114,19 +115,19 @@ export default function HomePage() {
     fetchFeaturedStories();
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const term = searchTerm.trim();
-
-    if (!term) {
-      router.push("/clans");
-      return;
-    }
-
-    router.push(`/search?q=${encodeURIComponent(term)}`);
-  };
-
+const handleSearch = (e: React.FormEvent) => {
+  e.preventDefault();
+  const term = searchTerm.trim();
+  if (!term) {
+    router.push("/clans");
+    return;
+  }
+  
+  // Track the search
+  trackClanSearch(term);
+  
+  router.push(`/search?q=${encodeURIComponent(term)}`);
+};
   const handleLetterClick = (letter: string) => {
     if (!letter) {
       router.push("/clans");

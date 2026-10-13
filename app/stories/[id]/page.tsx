@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { trackStoryView } from "@/app/lib/analytics";
 
 type Story = {
   id: number;
@@ -84,11 +85,18 @@ export default function StoryDetailPage() {
         const data = await res.json();
         setStory(data);
         
+        // ← Track the story view
+        if (data.title && data.id) {
+          trackStoryView(data.title, data.id);
+        }
+        
+        // Extract headings for table of contents
         if (data.content) {
           const extractedHeadings = extractHeadings(data.content);
           setHeadings(extractedHeadings);
         }
         
+        // Fetch related stories (same tribe)
         if (data.clan?.tribe) {
           const storiesRes = await fetch("/api/stories");
           const allStories = await storiesRes.json();
@@ -111,6 +119,7 @@ export default function StoryDetailPage() {
     }
   }, [params.id]);
 
+  // Print function
   const handlePrint = () => {
     const printContent = contentRef.current?.innerHTML;
     const originalTitle = document.title;
@@ -146,6 +155,7 @@ export default function StoryDetailPage() {
     document.title = originalTitle;
   };
 
+  // Scroll to section
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -217,9 +227,12 @@ export default function StoryDetailPage() {
         />
       </div>
 
+      {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
 
+      {/* Content */}
       <div className="relative z-10">
+        {/* Decorative top bar */}
         <div className="w-full h-1 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500" />
 
         <div className="max-w-6xl mx-auto px-6 py-8">
@@ -307,6 +320,7 @@ export default function StoryDetailPage() {
 
           {/* Two Column Layout: Table of Contents + Content */}
           <div className="flex flex-col lg:flex-row gap-8">
+            {/* Table of Contents - Desktop Sidebar */}
             {headings.length > 0 && (
               <div className="lg:w-64 flex-shrink-0 no-print">
                 <div className="sticky top-24 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 p-4">
@@ -329,6 +343,7 @@ export default function StoryDetailPage() {
 
             {/* Main Content */}
             <div className="flex-1">
+              {/* Featured Image (if available) */}
               {story.imageUrl && (
                 <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
                   <div className="relative h-64 md:h-96 w-full">
@@ -343,6 +358,7 @@ export default function StoryDetailPage() {
                 </div>
               )}
 
+              {/* Story Content Card */}
               <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
                 <div className="w-full h-1.5 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500" />
                 
@@ -445,6 +461,7 @@ export default function StoryDetailPage() {
         </div>
       </div>
 
+      {/* Scroll to Top Button */}
       <ScrollToTop />
     </div>
   );

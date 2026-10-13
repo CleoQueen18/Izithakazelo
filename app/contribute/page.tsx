@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { trackContributionSubmit } from "@/app/lib/analytics";
 
 type ContributionType = "NEW_SURNAME" | "NEW_PRAISE" | "CORRECTION";
 
@@ -104,6 +105,9 @@ export default function ContributePage() {
       if (!res.ok) {
         throw new Error("Failed to submit contribution");
       }
+
+      // ← Track the successful submission
+      trackContributionSubmit(contributionType);
 
       setSubmitted(true);
       setForm(initialForm);
@@ -722,12 +726,7 @@ export default function ContributePage() {
                         <p>{error}</p>
                         <button
                           type="button"
-                          onClick={() => {
-                            setError(null);
-                            // Re-trigger submit by dispatching event
-                            const form = document.querySelector('form');
-                            if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                          }}
+                          onClick={() => setError(null)}
                           className="mt-2 text-red-800 font-medium underline hover:no-underline transition"
                         >
                           Try again

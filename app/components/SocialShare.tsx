@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackSocialShare } from "@/app/lib/analytics";
 
 type SocialShareProps = {
   title: string;
@@ -44,7 +45,12 @@ export default function SocialShare({ title, text, url, clanId, clanName }: Soci
   };
 
   const handleShare = (platform: string, link: string) => {
+    // Existing database analytics
     trackShare(platform);
+    
+    // Google Analytics 4 tracking
+    trackSocialShare(platform, title);
+    
     window.open(link, "_blank");
     setShowPopup(false);
   };
@@ -54,6 +60,7 @@ export default function SocialShare({ title, text, url, clanId, clanName }: Soci
       await navigator.clipboard.writeText(`${text}\n\n${url}`);
       setCopied(true);
       trackShare("copy");
+      trackSocialShare("copy", title);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
