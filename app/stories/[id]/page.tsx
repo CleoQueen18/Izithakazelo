@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import SocialShare from "@/app/components/SocialShare";
 import { trackStoryView } from "@/app/lib/analytics";
 
 type Story = {
@@ -52,6 +53,14 @@ export default function StoryDetailPage() {
   const [progress, setProgress] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const [headings, setHeadings] = useState<{ text: string; id: string }[]>([]);
+  const [shareUrl, setShareUrl] = useState("");
+
+  // Set share URL after mount (client-side only)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setShareUrl(window.location.href);
+    }
+  }, []);
 
   // Scroll progress tracking
   useEffect(() => {
@@ -370,17 +379,18 @@ export default function StoryDetailPage() {
                 </div>
               </div>
 
-              {/* Share Buttons at Bottom - ONLY COPY LINK */}
-              <div className="mt-8 flex justify-center gap-3 no-print">
-                <button
-                  onClick={() => navigator.clipboard.writeText(window.location.href)}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-sm transition flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                  Copy Link
-                </button>
+              {/* Share Section - Now with WhatsApp, Email, and Copy Link */}
+              <div className="mt-8 flex flex-col items-center gap-3 no-print">
+                <p className="text-white/50 text-xs uppercase tracking-wider">
+                  Share this story
+                </p>
+                <div className="flex justify-center gap-3">
+                  <SocialShare
+                    title={story.title}
+                    text={story.summary}
+                    url={shareUrl}
+                  />
+                </div>
               </div>
             </div>
           </div>

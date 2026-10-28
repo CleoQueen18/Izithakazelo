@@ -32,14 +32,18 @@ model Surname {
 }
 
 model ClanSurname {
-  id          Int      @id @default(autoincrement())
-  clanId      Int
-  surnameId   Int
-  clan_praise String
-  clan        Clan     @relation(fields: [clanId], references: [id])
-  surname     Surname  @relation(fields: [surnameId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 Int      @id @default(autoincrement())
+  clanId             Int
+  surnameId          Int
+  clan_praise        String
+  sourceTitle        String?
+  sourceUrl          String?
+  verificationStatus String   @default("UNVERIFIED")
+  isRebuilding       Boolean  @default(true)
+  clan               Clan     @relation(fields: [clanId], references: [id])
+  surname            Surname  @relation(fields: [surnameId], references: [id])
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   @@unique([clanId, surnameId])
 }
@@ -97,3 +101,4 @@ model ClanImage {
   
   @@unique([clanId, isPrimary])
 }
+
