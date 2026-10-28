@@ -15,7 +15,7 @@ type Contribution = {
   createdAt: string;
 };
 
-const ADMIN_PASSWORD = "BeeC@1218"; // Change this!
+const ADMIN_PASSWORD = "BeeC@1218";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -28,7 +28,6 @@ export default function AdminPage() {
   const [filter, setFilter] = useState("PENDING");
   const [notification, setNotification] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  // Check authentication on load
   useEffect(() => {
     const auth = sessionStorage.getItem("adminAuth");
     if (auth === "true") {
@@ -65,72 +64,109 @@ export default function AdminPage() {
 
   async function updateStatus(id: number, status: string) {
     try {
-      // 1. Update the contribution status
-      const res = await fetch("/api/admin/contributions", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status, adminNotes }),
-      });
-      
-      if (!res.ok) throw new Error("Failed to update");
+      const contribution = contributions.find((c) => c.id === id);
+      if (!contribution) return;
 
-      // 2. If approved, add to clanSurname
+      const data = JSON.parse(contribution.data);
+
+      // APPROVE LOGIC — depends on contribution type
       if (status === "APPROVED") {
-        const contribution = contributions.find(c => c.id === id);
-        if (contribution) {
-          const data = JSON.parse(contribution.data);
-          
-          // Call the clans API to create the relationship
+        if (contribution.type === "SURNAME_PRAISE") {
+          // New flow: update the existing ClanSurname directly
+          const res = await fetch("/api/admin/contributions/approve-praise", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contributionId: id,
+              clanId: data.clanId,
+              surnameId: data.surnameId,
+              praise: data.praise,
+              source: data.source || "Community contribution",
+              contributorName: contribution.contributorName,
+              adminNotes,
+            }),
+          });
+
+          if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.error || "Failed to approve praise");
+          }
+        } else if (
+          contribution.type === "NEW_PRAISE" ||
+          contribution.type === "NEW_SURNAME"
+        ) {
+          // Legacy flow: use /api/clans to create new
           const createRes = await fetch("/api/clans", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               surname: data.surname || data.name,
               clanName: data.clanName,
-              clan_praise: data.clan_praise || "",
+              clan_praise: data.clan_praise || data.praise || "",
               origin: data.origin || "",
               language: data.language || "",
             }),
           });
-          
+
           if (!createRes.ok) {
             const errorData = await createRes.json();
-            console.error("Create clan error:", errorData);
-            setNotification({ 
-              type: "error", 
-              message: `Contribution approved but failed to add to website: ${errorData.error || "Unknown error"}` 
-            });
-            setSelectedContribution(null);
-            setAdminNotes("");
-            fetchContributions();
-            setTimeout(() => setNotification(null), 5000);
-            return;
+            throw new Error(errorData.error || "Failed to create clan relationship");
           }
         }
+
+        // Update the contribution status
+        const patchRes = await fetch("/api/admin/contributions", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, status, adminNotes }),
+        });
+
+        if (!patchRes.ok) throw new Error("Failed to update status");
+
+        setNotification({
+          type: "success",
+          message: "Contribution approved and published!",
+        });
+      } else {
+        // REJECT
+        const patchRes = await fetch("/api/admin/contributions", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, status, adminNotes }),
+        });
+
+        if (!patchRes.ok) throw new Error("Failed to update status");
+
+        setNotification({
+          type: "success",
+          message: "Contribution rejected.",
+        });
       }
-      
-      setNotification({ type: "success", message: `Contribution ${status.toLowerCase()} successfully!` });
+
       setSelectedContribution(null);
       setAdminNotes("");
       fetchContributions();
-      setTimeout(() => setNotification(null), 3000);
+      setTimeout(() => setNotification(null), 4000);
     } catch (error) {
       console.error("Update error:", error);
-      setNotification({ type: "error", message: "Failed to update contribution." });
+      setNotification({
+        type: "error",
+        message: error instanceof Error ? error.message : "Failed to update contribution.",
+      });
     }
   }
 
   async function deleteContribution(id: number) {
     if (!confirm("Are you sure you want to delete this contribution?")) return;
-    
+
     try {
       const res = await fetch(`/api/admin/contributions?id=${id}`, {
         method: "DELETE",
       });
-      
+
       if (!res.ok) throw new Error("Failed to delete");
-      
-      setNotification({ type: "success", message: "Contribution deleted successfully!" });
+
+      setNotification({ type: "success", message: "Contribution deleted." });
       fetchContributions();
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
@@ -144,15 +180,14 @@ export default function AdminPage() {
     router.push("/");
   }
 
-  const filteredContributions = contributions.filter(c => 
-    filter === "ALL" || c.status === filter
+  const filteredContributions = contributions.filter(
+    (c) => filter === "ALL" || c.status === filter
   );
 
-  const pendingCount = contributions.filter(c => c.status === "PENDING").length;
-  const approvedCount = contributions.filter(c => c.status === "APPROVED").length;
-  const rejectedCount = contributions.filter(c => c.status === "REJECTED").length;
+  const pendingCount = contributions.filter((c) => c.status === "PENDING").length;
+  const approvedCount = contributions.filter((c) => c.status === "APPROVED").length;
+  const rejectedCount = contributions.filter((c) => c.status === "REJECTED").length;
 
-  // Show login screen if not authenticated
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -178,7 +213,6 @@ export default function AdminPage() {
     );
   }
 
-  // Show loading after authentication
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto px-6 py-20 text-center">
@@ -188,10 +222,8 @@ export default function AdminPage() {
     );
   }
 
-  // Admin content
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
-      {/* Header with Logout Button */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <button
@@ -201,13 +233,13 @@ export default function AdminPage() {
             ← Back
           </button>
           <h1 className="text-3xl font-semibold text-gray-800 mt-2">Admin Dashboard</h1>
-          <p className="text-gray-500 mt-1">Manage user contributions to the heritage archive</p>
+          <p className="text-gray-500 mt-1">Manage contributions to the heritage archive</p>
           <div className="w-16 h-1 bg-amber-600 mt-4 rounded-full" />
         </div>
-        
+
         <div className="flex gap-3">
           <Link
-            href="/admin/stories"
+            href="/secret-admin-xyz123/stories"
             className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 rounded-xl transition font-medium"
           >
             Manage Stories
@@ -221,7 +253,6 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-yellow-50 rounded-2xl p-4 border border-yellow-200">
           <div className="text-2xl font-bold text-yellow-700">{pendingCount}</div>
@@ -237,23 +268,25 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Notification */}
       {notification && (
-        <div className={`mb-6 p-4 rounded-xl ${notification.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+        <div
+          className={`mb-6 p-4 rounded-xl ${
+            notification.type === "success"
+              ? "bg-green-50 text-green-700"
+              : "bg-red-50 text-red-700"
+          }`}
+        >
           {notification.message}
         </div>
       )}
 
-      {/* Filter Tabs */}
       <div className="flex gap-2 mb-6 border-b border-amber-100">
         {["PENDING", "APPROVED", "REJECTED", "ALL"].map((tab) => (
           <button
             key={tab}
             onClick={() => setFilter(tab)}
             className={`px-4 py-2 rounded-t-lg transition ${
-              filter === tab
-                ? "bg-amber-700 text-white"
-                : "text-gray-500 hover:text-amber-700"
+              filter === tab ? "bg-amber-700 text-white" : "text-gray-500 hover:text-amber-700"
             }`}
           >
             {tab}
@@ -261,7 +294,6 @@ export default function AdminPage() {
         ))}
       </div>
 
-      {/* Contributions List */}
       {filteredContributions.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl border border-amber-100">
           <p className="text-gray-500">No contributions found.</p>
@@ -275,18 +307,25 @@ export default function AdminPage() {
             } catch {
               data = { error: "Invalid JSON" };
             }
-            
+
             return (
-              <div key={contribution.id} className="bg-white rounded-2xl border border-amber-100 overflow-hidden shadow-sm">
+              <div
+                key={contribution.id}
+                className="bg-white rounded-2xl border border-amber-100 overflow-hidden shadow-sm"
+              >
                 <div className="p-5">
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                          contribution.status === "PENDING" ? "bg-yellow-100 text-yellow-700" :
-                          contribution.status === "APPROVED" ? "bg-green-100 text-green-700" :
-                          "bg-red-100 text-red-700"
-                        }`}>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            contribution.status === "PENDING"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : contribution.status === "APPROVED"
+                              ? "bg-green-100 text-green-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
                           {contribution.status}
                         </span>
                         <span className="text-xs text-gray-400">
@@ -294,11 +333,10 @@ export default function AdminPage() {
                         </span>
                       </div>
                       <h3 className="text-lg font-semibold text-gray-800">
-                        {contribution.type.replace("_", " ")}
+                        {contribution.type.replace(/_/g, " ")}
                       </h3>
                       <p className="text-sm text-gray-500">
                         From: {contribution.contributorName}
-                        {contribution.contributorEmail && ` (${contribution.contributorEmail})`}
                       </p>
                     </div>
                     <div className="flex gap-2">
@@ -307,7 +345,7 @@ export default function AdminPage() {
                           setSelectedContribution(contribution);
                           setAdminNotes(contribution.adminNotes || "");
                         }}
-                        className="text-amber-700 hover:text-amber-800 text-sm"
+                        className="text-amber-700 hover:text-amber-800 text-sm font-medium"
                       >
                         Review
                       </button>
@@ -319,12 +357,38 @@ export default function AdminPage() {
                       </button>
                     </div>
                   </div>
-                  
-                  <div className="bg-gray-50 rounded-xl p-3 mt-2">
-                    <pre className="text-xs text-gray-600 whitespace-pre-wrap font-mono">
-                      {JSON.stringify(data, null, 2)}
-                    </pre>
-                  </div>
+
+                  {/* SURNAME_PRAISE — custom display */}
+                  {contribution.type === "SURNAME_PRAISE" && !data.error ? (
+                    <div className="bg-gray-50 rounded-xl p-4 mt-2 space-y-2">
+                      <div>
+                        <span className="text-xs font-medium text-gray-500">Surname:</span>
+                        <p className="text-sm font-semibold text-gray-800">
+                          {data.surname}
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-xs font-medium text-gray-500">Clan:</span>
+                        <p className="text-sm text-gray-800">{data.clanName}</p>
+                      </div>
+                      <div>
+                        <span className="text-xs font-medium text-gray-500">Praise:</span>
+                        <p className="text-sm italic text-gray-700">"{data.praise}"</p>
+                      </div>
+                      {data.source && (
+                        <div>
+                          <span className="text-xs font-medium text-gray-500">Source:</span>
+                          <p className="text-sm text-gray-700">{data.source}</p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 rounded-xl p-3 mt-2">
+                      <pre className="text-xs text-gray-600 whitespace-pre-wrap font-mono">
+                        {JSON.stringify(data, null, 2)}
+                      </pre>
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -332,13 +396,14 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Review Modal */}
       {selectedContribution && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-semibold text-gray-800">Review Contribution</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Review Contribution
+                </h2>
                 <button
                   onClick={() => setSelectedContribution(null)}
                   className="text-gray-400 hover:text-gray-600"
@@ -346,47 +411,54 @@ export default function AdminPage() {
                   ✕
                 </button>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                  <p className="text-gray-600">{selectedContribution.type.replace("_", " ")}</p>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Type
+                  </label>
+                  <p className="text-gray-600">
+                    {selectedContribution.type.replace(/_/g, " ")}
+                  </p>
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Data</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Data
+                  </label>
                   <div className="bg-gray-50 rounded-xl p-3">
                     <pre className="text-sm text-gray-600 whitespace-pre-wrap">
                       {JSON.stringify(JSON.parse(selectedContribution.data), null, 2)}
                     </pre>
                   </div>
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contributor</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Contributor
+                  </label>
                   <p className="text-gray-600">{selectedContribution.contributorName}</p>
-                  {selectedContribution.contributorEmail && (
-                    <p className="text-sm text-gray-400">{selectedContribution.contributorEmail}</p>
-                  )}
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin Notes (Optional)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Admin Notes
+                  </label>
                   <textarea
                     value={adminNotes}
                     onChange={(e) => setAdminNotes(e.target.value)}
                     rows={3}
-                    placeholder="Add any notes about this decision..."
+                    placeholder="Optional notes..."
                     className="w-full px-4 py-3 border border-amber-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
-                
+
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => updateStatus(selectedContribution.id, "APPROVED")}
                     className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl transition"
                   >
-                    Approve
+                    Approve & Publish
                   </button>
                   <button
                     onClick={() => updateStatus(selectedContribution.id, "REJECTED")}
