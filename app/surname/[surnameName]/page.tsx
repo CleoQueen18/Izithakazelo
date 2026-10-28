@@ -4,10 +4,15 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import SocialShare from "@/app/components/SocialShare";
+import { trackStoryView } from "@/app/lib/analytics";
 
 type ClanRelation = {
   id: number;
   clan_praise: string;
+  sourceTitle: string | null;
+  sourceUrl: string | null;
+  verificationStatus: string;
+  isRebuilding: boolean;
   clan: {
     id: number;
     name: string;
@@ -28,160 +33,276 @@ export default function SurnameDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [surnameName, setSurnameName] = useState<string>("");
-  const [data, setData] = useState<SurnameData | null>(null);
+  const [surname, setSurname] = useState<SurnameData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
 
   useEffect(() => {
-    async function getSurnameName() {
-      const resolvedParams = await params;
-      setSurnameName(resolvedParams.surnameName as string);
+    if (typeof window !== "undefined") {
+      setShareUrl(window.location.href);
     }
-    getSurnameName();
-  }, [params]);
+  }, []);
 
   useEffect(() => {
-    async function fetchSurnameData() {
-      if (!surnameName) return;
-      
+    if (params.surnameName) {
+      setSurnameName(decodeURIComponent(params.surnameName as string));
+    }
+  }, [params.surnameName]);
+
+  useEffect(() => {
+    if (!surnameName) return;
+
+    async function fetchSurname() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/surname/${encodeURIComponent(surnameName)}`);
-        
+        setNotFound(false);
+
+        const res = await fetch(
+          `/api/surname/${encodeURIComponent(surnameName)}`
+        );
+
         if (!res.ok) {
           if (res.status === 404) {
-            setError(`Surname "${surnameName}" not found`);
-          } else {
-            setError("Failed to load surname data");
+            setNotFound(true);
+            setSurname(null);
+            return;
           }
-          return;
+          throw new Error("Failed to fetch");
         }
-        
+
         const data = await res.json();
-        setData(data);
-      } catch (error) {
-        console.error("Fetch error:", error);
-        setError("Something went wrong. Please try again.");
+        setSurname(data);
+      } catch (err) {
+        console.error(err);
+        setNotFound(true);
       } finally {
         setLoading(false);
       }
     }
-    
-    fetchSurnameData();
+
+    fetchSurname();
   }, [surnameName]);
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-amber-700 border-t-transparent mx-auto" />
-        <p className="mt-4 text-gray-500">Loading surname data...</p>
-      </div>
+      <main className="min-h-screen bg-[#faf7f2] flex items-center justify-center px-6">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-amber-700 border-t-transparent" />
+          <p className="mt-5 text-sm text-gray-500">
+            Loading {surnameName}...
+          </p>
+        </div>
+      </main>
     );
   }
 
-  if (error || !data) {
+  if (notFound) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">Surname Not Found</h1>
-        <p className="text-gray-500 mb-8">{error || "No data available"}</p>
-        <button
-          onClick={() => router.push("/clans")}
-          className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-xl transition"
-        >
-          Browse All Clans
-        </button>
-      </div>
+      <main className="min-h-screen bg-[#faf7f2] flex items-center justify-center px-6">
+        <div className="w-full max-w-xl rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
+            <span className="text-2xl">⌕</span>
+          </div>
+
+          <h1 className="mt-5 text-2xl font-semibold text-gray-900">
+            {surnameName} isn't in our database yet
+          </h1>
+
+          <p className="mt-3 text-sm leading-6 text-gray-500">
+            We don't yet have a record for this surname. Know someone with
+            this surname? You can help us build the archive.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/clans"
+              className="rounded-full border border-gray-200 px-6 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+            >
+              Browse clans
+            </Link>
+            <Link
+              href="/contribute"
+              className="rounded-full bg-amber-700 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-800"
+            >
+              Add this surname
+            </Link>
+          </div>
+        </div>
+      </main>
     );
   }
 
-  const displayName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  if (!surname) return null;
+
+  const clanCount = surname.clans.length;
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8">
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        className="mb-6 text-gray-500 hover:text-amber-700 transition text-sm"
-      >
-        ← Back
-      </button>
+    <main className="min-h-screen bg-[#faf7f2] text-gray-800">
+      {/* HEADER */}
+      <section className="bg-[#211b16] text-white">
+        <div className="mx-auto max-w-4xl px-4 pb-12 pt-8 sm:px-6 sm:pb-16 sm:pt-10">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/70 backdrop-blur-sm transition hover:border-amber-400/30 hover:bg-white/10 hover:text-white"
+          >
+            ← Back
+          </button>
 
-      {/* Surname Header with Share Button */}
-      <div className="mb-10 flex justify-between items-start">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-semibold text-gray-800 mb-3">
-            {displayName}
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400">
+            Surname
+          </p>
+
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
+            {surname.name}
           </h1>
-          <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-500">
-            {data.origin && <span>Origin: {data.origin}</span>}
-            {data.language && <span>Language: {data.language}</span>}
-          </div>
-          <div className="w-16 h-1 bg-amber-600 mt-4 rounded-full" />
-        </div>
-        <SocialShare
-          title={`${displayName} - Izithakazelo Surname`}
-          text={`Learn about the surname ${displayName} and its associated clans. Origin: ${data.origin || 'Various'} | Language: ${data.language || 'Various'}`}
-          url={shareUrl}
-        />
-      </div>
 
-      {/* Clans that bear this surname */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-          Clans that bear the name {displayName}
-        </h2>
-        <p className="text-gray-500 mb-6">
-          This surname appears in {data.clans.length} clan{data.clans.length !== 1 ? 's' : ''}
-        </p>
-        
-        {data.clans.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-amber-100 p-8 text-center">
-            <p className="text-gray-500">This surname is not associated with any clans yet.</p>
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-white/70">
+            {surname.language && (
+              <span className="rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+                {surname.language}
+              </span>
+            )}
+            {surname.origin && (
+              <span className="rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+                {surname.origin}
+              </span>
+            )}
+            <span className="text-white/50">
+              {clanCount} {clanCount === 1 ? "clan connection" : "clan connections"}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* CLAN CONNECTIONS */}
+      <section className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
+        {clanCount === 0 ? (
+          <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm sm:p-12">
+            <h2 className="text-xl font-semibold text-gray-900">
+              No clan connections recorded yet
+            </h2>
+            <p className="mt-3 text-sm text-gray-500">
+              This surname is in our database, but no clans have been linked
+              to it yet. If you know which clans this surname belongs to,
+              please share what you know.
+            </p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {data.clans.map((relation) => (
-              <div key={relation.id} className="bg-white rounded-2xl border border-amber-100 overflow-hidden shadow-sm hover:shadow-md transition">
-                <div className="bg-gradient-to-r from-amber-50 to-white px-6 py-4 border-b border-amber-100">
-                  <Link 
-                    href={`/tribe/${relation.clan.tribe.toLowerCase()}`}
-                    className="text-sm text-amber-600 hover:text-amber-700 transition"
-                  >
-                    {relation.clan.tribe} Tribe
-                  </Link>
-                  <h3 className="text-2xl font-semibold text-gray-800 mt-1">
-                    {relation.clan.name} Clan
-                  </h3>
+          <div className="space-y-4">
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wider text-amber-700">
+              Clans & Praises
+            </h2>
+
+            {surname.clans.map((rel) => (
+              <div
+                key={rel.id}
+                className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+              >
+                <div className="border-b border-gray-100 px-5 py-4 sm:px-6">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {rel.clan.name} Clan
+                      </h3>
+                      <p className="mt-0.5 text-xs text-gray-500">
+                        {rel.clan.tribe} tribe
+                      </p>
+                    </div>
+                    {rel.clan_praise && !rel.isRebuilding && (
+                      <span className="rounded-full bg-green-50 px-3 py-1 text-[10px] font-medium text-green-700 ring-1 ring-green-200">
+                        Contributed
+                      </span>
+                    )}
+                  </div>
                 </div>
-                
-                <div className="p-6">
-                  <p className="text-gray-600 italic text-lg leading-relaxed">
-                    "{relation.clan_praise}"
-                  </p>
-                  {relation.clan.description && (
-                    <p className="text-gray-500 text-sm mt-4 pt-4 border-t border-amber-50">
-                      {relation.clan.description}
-                    </p>
+
+                <div className="px-5 py-5 sm:px-6">
+                  {rel.isRebuilding || !rel.clan_praise ? (
+                    <div>
+                      <p className="text-sm leading-6 text-gray-600">
+                        We don't yet have verified izithakazelo for{" "}
+                        <span className="font-medium text-gray-900">
+                          {surname.name}
+                        </span>{" "}
+                        in the {rel.clan.name} clan.
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Know the praises? Share what you know.
+                      </p>
+
+                      <div className="mt-4">
+                        <Link
+                          href="/contribute"
+                          className="inline-flex items-center gap-2 rounded-full bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-800"
+                        >
+                          Contribute Now
+                          <span aria-hidden="true">→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <blockquote className="border-l-2 border-amber-400 pl-4 text-base italic leading-7 text-gray-700">
+                        "{rel.clan_praise}"
+                      </blockquote>
+
+                      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                        {rel.sourceTitle && (
+                          <p className="text-xs text-gray-400">
+                            Source:{" "}
+                            {rel.sourceUrl ? (
+                              <a
+                                href={rel.sourceUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium text-amber-700 underline-offset-2 hover:underline"
+                              >
+                                {rel.sourceTitle}
+                              </a>
+                            ) : (
+                              <span className="font-medium text-gray-600">
+                                {rel.sourceTitle}
+                              </span>
+                            )}
+                          </p>
+                        )}
+
+                        <SocialShare
+                          title={`${surname.name} - ${rel.clan.name} Clan`}
+                          text={`"${rel.clan_praise}" - ${surname.name} (${rel.clan.name} Clan)`}
+                          url={`${shareUrl}`}
+                          clanId={rel.clan.id}
+                          clanName={rel.clan.name}
+                        />
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
             ))}
           </div>
         )}
-      </div>
 
-      {/* Call to Action */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-8 text-center mt-8">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">Know more about this surname?</h3>
-        <p className="text-gray-600 mb-4">Help us preserve heritage by contributing additional information.</p>
-        <Link
-          href="/clans#add-form"
-          className="inline-block bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-xl transition"
-        >
-          Contribute Now
-        </Link>
-      </div>
-    </div>
+        {/* CONTINUE EXPLORING */}
+        <div className="mt-12 rounded-2xl border border-amber-100 bg-white p-6 sm:p-8">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Explore other surnames
+          </h3>
+          <p className="mt-2 text-sm text-gray-500">
+            Browse the archive of clans and surnames connected to our heritage.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Link
+              href="/clans"
+              className="inline-flex items-center gap-2 rounded-full bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-800"
+            >
+              Browse all clans →
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
