@@ -201,12 +201,10 @@ function ClansContent() {
   const filteredClans = useMemo(() => {
     let result = clans;
 
-    // Tribe
     if (selectedTribe !== "All") {
       result = result.filter((clan) => clan.tribe === selectedTribe);
     }
 
-    // Search
     if (search.trim()) {
       const query = search.trim().toLowerCase();
 
@@ -224,7 +222,6 @@ function ClansContent() {
       });
     }
 
-    // Alphabet
     if (selectedLetter) {
       result = result
         .map((clan) => ({
@@ -269,10 +266,7 @@ function ClansContent() {
 
   return (
     <main className="min-h-screen bg-[#faf7f2] text-gray-800">
-      {/* ========================================================
-          HERO
-      ======================================================== */}
-
+      {/* HERO */}
       <section className="relative overflow-hidden bg-[#241b15]">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -282,7 +276,6 @@ function ClansContent() {
         />
 
         <div className="absolute inset-0 bg-black/65" />
-
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/55 to-[#241b15]" />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
@@ -305,8 +298,8 @@ function ClansContent() {
             </h1>
 
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
-              Discover family names, clan praises and the cultural
-              heritage carried through generations.
+              Discover family names, clan praises and the cultural heritage
+              carried through generations.
             </p>
 
             <div className="mt-7 h-px w-16 bg-amber-500" />
@@ -314,10 +307,7 @@ function ClansContent() {
         </div>
       </section>
 
-      {/* ========================================================
-          MAIN
-      ======================================================== */}
-
+      {/* MAIN */}
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
         {/* Intro */}
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
@@ -331,16 +321,13 @@ function ClansContent() {
             </h2>
 
             <p className="mt-3 text-sm leading-7 text-gray-500 sm:text-base">
-              Search by clan, surname, tribe or the first letter
-              of a family name.
+              Search by clan, surname, tribe or the first letter of a family
+              name.
             </p>
           </div>
         </div>
 
-        {/* ======================================================
-            SEARCH
-        ====================================================== */}
-
+        {/* SEARCH */}
         <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
@@ -384,10 +371,7 @@ function ClansContent() {
           </div>
         </div>
 
-        {/* ======================================================
-            FILTER BAR
-        ====================================================== */}
-
+        {/* FILTER BAR */}
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
@@ -425,10 +409,7 @@ function ClansContent() {
           </div>
         </div>
 
-        {/* ======================================================
-            ALPHABET
-        ====================================================== */}
-
+        {/* ALPHABET */}
         {showFilters && (
           <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
             <div className="mb-4 flex items-center justify-between">
@@ -472,10 +453,7 @@ function ClansContent() {
           </div>
         )}
 
-        {/* ======================================================
-            ACTIVE FILTERS
-        ====================================================== */}
-
+        {/* ACTIVE FILTERS */}
         {(selectedLetter || selectedTribe !== "All" || search) && (
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <span className="text-xs text-gray-400">Active filters:</span>
@@ -515,10 +493,7 @@ function ClansContent() {
           </div>
         )}
 
-        {/* ======================================================
-            CLAN LIST
-        ====================================================== */}
-
+        {/* CLAN LIST */}
         <div className="mt-8 space-y-4">
           {filteredClans.length === 0 ? (
             <div className="rounded-3xl border border-gray-200 bg-white px-6 py-16 text-center shadow-sm">
@@ -548,6 +523,8 @@ function ClansContent() {
           ) : (
             filteredClans.map((clan) => {
               const isExpanded = expandedClans.has(clan.id);
+              const tribeDiffersFromClan =
+                clan.name.toLowerCase() !== clan.tribe.toLowerCase();
 
               return (
                 <article
@@ -564,12 +541,15 @@ function ClansContent() {
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="text-lg font-semibold text-gray-900 sm:text-xl">
-                          {clan.name}
+                          {clan.name} Clan
                         </h3>
 
-                        <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-700">
-                          {clan.tribe}
-                        </span>
+                        {/* Only show tribe badge if it differs from clan name */}
+                        {tribeDiffersFromClan && (
+                          <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-700">
+                            {clan.tribe}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -618,57 +598,64 @@ function ClansContent() {
                           </div>
                         ) : (
                           <div className="mt-5 divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-100">
-                            {clan.surnames.map((item) => (
-                              <Link
-                                key={item.id}
-                                href={`/surname/${encodeURIComponent(
-                                  item.surname.name
-                                )}`}
-                                className="group flex items-center justify-between gap-4 p-4 transition hover:bg-amber-50/40 sm:p-5"
-                              >
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-base font-semibold text-gray-900 transition group-hover:text-amber-700 sm:text-lg">
-                                      {item.surname.name}
-                                    </span>
+                            {clan.surnames.map((item) => {
+                              // If surname name matches clan name, don't repeat it
+                              const surnameMatchesClan =
+                                item.surname.name.toLowerCase() ===
+                                clan.name.toLowerCase();
 
-                                    {item.clan_praise &&
-                                      !item.isRebuilding && (
-                                        <span className="rounded-full bg-green-50 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-green-700 ring-1 ring-green-200">
-                                          Verified
-                                        </span>
-                                      )}
-                                  </div>
-
-                                  <div className="mt-1 flex flex-wrap gap-2">
-                                    {item.surname.language && (
-                                      <span className="text-xs text-gray-400">
-                                        {item.surname.language}
+                              return (
+                                <Link
+                                  key={item.id}
+                                  href={`/surname/${encodeURIComponent(
+                                    item.surname.name
+                                  )}`}
+                                  className="group flex items-center justify-between gap-4 p-4 transition hover:bg-amber-50/40 sm:p-5"
+                                >
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-base font-semibold text-gray-900 transition group-hover:text-amber-700 sm:text-lg">
+                                        {surnameMatchesClan
+                                          ? `${item.surname.name} (surname)`
+                                          : item.surname.name}
                                       </span>
-                                    )}
-                                    {item.surname.origin && (
-                                      <>
-                                        <span className="text-xs text-gray-300">
-                                          ·
-                                        </span>
-                                        <span className="text-xs text-gray-400">
-                                          {item.surname.origin}
-                                        </span>
-                                      </>
-                                    )}
-                                  </div>
-                                </div>
 
-                                <div className="flex shrink-0 items-center gap-2">
-                                  <span className="hidden text-xs font-medium text-amber-700 sm:inline">
-                                    {item.isRebuilding || !item.clan_praise
-                                      ? "Share what you know"
-                                      : "View praises"}
-                                  </span>
-                                  <ChevronRight className="h-4 w-4 text-gray-300 transition group-hover:translate-x-1 group-hover:text-amber-600" />
-                                </div>
-                              </Link>
-                            ))}
+                                      {item.clan_praise &&
+                                        !item.isRebuilding && (
+                                          <span className="rounded-full bg-green-50 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-green-700 ring-1 ring-green-200">
+                                            Verified
+                                          </span>
+                                        )}
+                                    </div>
+
+                                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-400">
+                                      {item.surname.language && (
+                                        <span>{item.surname.language}</span>
+                                      )}
+                                      {item.surname.language &&
+                                        item.surname.origin && (
+                                          <span className="text-gray-300">
+                                            ·
+                                          </span>
+                                        )}
+                                      {item.surname.origin && (
+                                        <span>{item.surname.origin}</span>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div className="flex shrink-0 items-center gap-2">
+                                    <span className="hidden text-xs font-medium text-amber-700 sm:inline">
+                                      {item.isRebuilding ||
+                                      !item.clan_praise
+                                        ? "Share what you know"
+                                        : "View praises"}
+                                    </span>
+                                    <ChevronRight className="h-4 w-4 text-gray-300 transition group-hover:translate-x-1 group-hover:text-amber-600" />
+                                  </div>
+                                </Link>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
@@ -681,10 +668,7 @@ function ClansContent() {
         </div>
       </section>
 
-      {/* ========================================================
-          CONTRIBUTION CTA
-      ======================================================== */}
-
+      {/* CONTRIBUTION CTA */}
       <section className="border-t border-amber-100 bg-[#eee3d4]">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -698,8 +682,8 @@ function ClansContent() {
               </h2>
 
               <p className="mt-3 text-sm leading-7 text-gray-600">
-                Share what you know with the community. Every contribution
-                is reviewed before being added to the archive.
+                Share what you know with the community. Every contribution is
+                reviewed before being added to the archive.
               </p>
             </div>
 
@@ -714,10 +698,7 @@ function ClansContent() {
         </div>
       </section>
 
-      {/* ========================================================
-          FOOTER
-      ======================================================== */}
-
+      {/* FOOTER */}
       <footer className="bg-[#211b16] text-white">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -746,31 +727,19 @@ function ClansContent() {
                 Clans
               </Link>
 
-              <Link
-                href="/tribes"
-                className="transition hover:text-white"
-              >
+              <Link href="/tribes" className="transition hover:text-white">
                 Tribes
               </Link>
 
-              <Link
-                href="/stories"
-                className="transition hover:text-white"
-              >
+              <Link href="/stories" className="transition hover:text-white">
                 Stories
               </Link>
 
-              <Link
-                href="/about"
-                className="transition hover:text-white"
-              >
+              <Link href="/about" className="transition hover:text-white">
                 About
               </Link>
 
-              <Link
-                href="/contact"
-                className="transition hover:text-white"
-              >
+              <Link href="/contact" className="transition hover:text-white">
                 Contact
               </Link>
             </nav>
@@ -785,10 +754,7 @@ function ClansContent() {
         </div>
       </footer>
 
-      {/* ========================================================
-          NOTIFICATION
-      ======================================================== */}
-
+      {/* NOTIFICATION */}
       {notification && (
         <div className="fixed bottom-5 left-1/2 z-[60] w-[calc(100%-2rem)] max-w-md -translate-x-1/2">
           <div
