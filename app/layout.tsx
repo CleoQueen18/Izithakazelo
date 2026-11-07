@@ -4,14 +4,13 @@ import Link from "next/link";
 import "./globals.css";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import Script from "next/script"; // <-- Added for AdSense
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/stories", label: "Stories" },
   { href: "/tribes", label: "Tribes" },
   { href: "/clans", label: "Clans" },
-  { href: "/contribute", label: "Community" }, // <-- Changed from "Contribute"
+  { href: "/contribute", label: "Community" },
   { href: "/contact", label: "Contact" },
   { href: "/about", label: "About" },
 ];
@@ -46,6 +45,9 @@ export default function RootLayout({
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
         <meta name="author" content="Izithakazelo Team" />
+
+        {/* Google AdSense Verification */}
+        <meta name="google-adsense-account" content="ca-pub-2708324260347234" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
@@ -85,14 +87,6 @@ export default function RootLayout({
 
         {/* Canonical URL */}
         <link rel="canonical" href="https://izithakazelo.co.za/" />
-
-        {/* Google AdSense Verification */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2708324260347234"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
 
         {/* Google Analytics */}
         <script
